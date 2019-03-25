@@ -95,6 +95,7 @@ public class RailroadInk {
      */
     public static boolean isValidPlacementSequence(String boardString) {
         // FIXME Task 6: determine whether the given placement sequence is valid
+
         return false;
     }
 
