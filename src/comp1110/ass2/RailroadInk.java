@@ -1,6 +1,7 @@
 package comp1110.ass2;
 
 import java.util.Arrays;
+import java.util.Random;
 
 public class RailroadInk {
     public static boolean isFaceValid(String tilePlacementString) {
@@ -111,6 +112,11 @@ public class RailroadInk {
      */
     public static String generateDiceRoll() {
         // FIXME Task 7: generate a dice roll
+        Random random = new Random(); // Creating the generator.
+        Integer faceA = (random.nextInt(6) + 0); // The generator for die A
+        Integer faceB = (random.nextInt(3) + 0); // The generator for die B
+        int counta; // Counting how many times die A has been rolled, making sure counta is equal to 3 at the end.
+        int countb; // Counting how many times die B has been rolled, making sure counta is equal to 1 at the end.
         return "";
     }
 
