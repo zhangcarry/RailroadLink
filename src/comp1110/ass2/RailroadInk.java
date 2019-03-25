@@ -32,11 +32,11 @@ public class RailroadInk {
         Character [] col = {'0', '1', '2', '3', '4', '5', '6'};
         Character [] ori = {'0', '1', '2', '3', '4', '5', '6', '7'};
         boolean isLengthValid = tilePlacementString.length() == 5;
-        boolean isDieValid = Arrays.asList(die).contains(tilePlacementString.charAt(0));
-        boolean isRowValid = Arrays.asList(row).contains(tilePlacementString.charAt(2));
-        boolean isColValid = Arrays.asList(col).contains(tilePlacementString.charAt(3));
-        boolean isOriValid = Arrays.asList(ori).contains(tilePlacementString.charAt(4));
         if (isLengthValid) {
+            boolean isDieValid = Arrays.asList(die).contains(tilePlacementString.charAt(0));
+            boolean isRowValid = Arrays.asList(row).contains(tilePlacementString.charAt(2));
+            boolean isColValid = Arrays.asList(col).contains(tilePlacementString.charAt(3));
+            boolean isOriValid = Arrays.asList(ori).contains(tilePlacementString.charAt(4));
             return (isDieValid && isRowValid && isColValid && isOriValid && isFaceValid(tilePlacementString));
         } else return false;
     }
