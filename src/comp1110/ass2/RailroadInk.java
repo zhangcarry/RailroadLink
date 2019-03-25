@@ -170,6 +170,11 @@ public class RailroadInk {
      */
     public static int getAdvancedScore(String boardString) {
         // FIXME Task 12: compute the total score including bonus points
+        int longestRailroad; //longestRailroad parameter
+        boolean longestRailroadScore; //calculate the bonus score for the longest Railroad
+        int longestHighway; //longestHighway parameter
+        boolean longestHighwayScore; //calculate the bonus score for the longest highway
+        int finalScore; //final scores parameter
         return -1;
     }
 }
