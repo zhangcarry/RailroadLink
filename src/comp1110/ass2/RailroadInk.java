@@ -155,6 +155,9 @@ public class RailroadInk {
     public static String generateMove(String boardString, String diceRoll) {
         // FIXME Task 10: generate a valid move
         Random random = new Random(); // Creating the generator.
+        boolean formed = isBoardStringWellFormed(boardString); // Check if the boardString input is formed.
+        String [] placements; // An array of valid placement for the round.
+        String placementsStr; // The string of valid placements.
         return null;
     }
 
