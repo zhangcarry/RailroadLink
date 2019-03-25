@@ -9,6 +9,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
+// import javafx.scene.image.Image ; Adding images of placements to the stage.
+
 /**
  * A very simple viewer for tile placements in the Railroad Ink game.
  * <p>
@@ -33,6 +35,10 @@ public class Viewer extends Application {
      */
     void makePlacement(String placement) {
         // FIXME Task 4: implement the simple placement viewer
+        boolean isPlacementValid; // Check if the given placement is valid.
+        // emptyScene() Empty any existing placements from the viewer.
+        // getPlacement() Import placement from assets package.
+        // addPlacement() Adding placement from the viewer.
     }
 
     /**

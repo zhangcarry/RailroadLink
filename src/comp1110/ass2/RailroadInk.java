@@ -51,6 +51,9 @@ public class RailroadInk {
      */
     public static boolean isBoardStringWellFormed(String boardString) {
         // FIXME Task 3: determine whether a board string is well-formed
+        boolean isLengthFormatted; // Check if the length is formatted to N five-character sets
+        boolean isPieceFormatted; // Check if each set is well-formatted
+        boolean areTilesValid; // Check to make sure there are no more than 3 sets with special tiles.
         return false;
     }
 
@@ -68,6 +71,9 @@ public class RailroadInk {
      */
     public static boolean areConnectedNeighbours(String tilePlacementStringA, String tilePlacementStringB) {
         // FIXME Task 5: determine whether neighbouring placements are connected
+        boolean isPositionConnected; // Check if either two placements' row or column are the same, but not both.
+        boolean areTypesValid; // Check if highway pieces are connected to highway pieces, not railway pieces.
+        boolean areOriConnected; // Check if orientations' of both pieces can indeed be connected.
         return false;
     }
 
@@ -151,4 +157,3 @@ public class RailroadInk {
         return -1;
     }
 }
-
