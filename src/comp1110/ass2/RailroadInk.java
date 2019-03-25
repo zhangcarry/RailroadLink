@@ -1,11 +1,23 @@
 package comp1110.ass2;
 
+import java.util.Arrays;
+
 public class RailroadInk {
+    public static boolean isFaceValid(String tilePlacementString) {
+        Character [] faceB = {'0', '1', '2'};
+        Character [] faceAS = {'0', '1', '2', '3', '4', '5'};
+        if (tilePlacementString.charAt(0) == 'B'){
+            return (Arrays.asList(faceB).contains(tilePlacementString.charAt(1)));
+        }
+        else {
+            return (Arrays.asList(faceAS).contains(tilePlacementString.charAt(1)));
+        }
+    }
     /**
      * Determine whether a tile placement string is well-formed:
      * - it consists of exactly 5 characters;
      * - the first character represents a die A or B, or a special tile S
-     * - the second character indicates which tile or face of the die (0-6 for die A and special tiles, or 0-3 for die B)
+     * - the second character indicates which tile or face of the die (0-5 for die A and special tiles, or 0-2 for die B)
      * - the third character represents the placement row A-G
      * - the fourth character represents the placement column 0-6
      * - the fifth character represents the orientation 0-7
@@ -15,9 +27,19 @@ public class RailroadInk {
      */
     public static boolean isTilePlacementWellFormed(String tilePlacementString) {
         // FIXME Task 2: determine whether a tile placement is well-formed
-        return false;
+        Character [] row = {'A', 'B', 'C', 'D', 'E', 'F', 'G'};
+        Character [] die = {'A', 'B', 'S'};
+        Character [] col = {'0', '1', '2', '3', '4', '5', '6'};
+        Character [] ori = {'0', '1', '2', '3', '4', '5', '6', '7'};
+        boolean isLengthValid = tilePlacementString.length() == 5;
+        boolean isDieValid = Arrays.asList(die).contains(tilePlacementString.charAt(0));
+        boolean isRowValid = Arrays.asList(row).contains(tilePlacementString.charAt(2));
+        boolean isColValid = Arrays.asList(col).contains(tilePlacementString.charAt(3));
+        boolean isOriValid = Arrays.asList(ori).contains(tilePlacementString.charAt(4));
+        if (isLengthValid) {
+            return (isDieValid && isRowValid && isColValid && isOriValid && isFaceValid(tilePlacementString));
+        } else return false;
     }
-
     /**
      * Determine whether a board string is well-formed:
      * - it consists of exactly N five-character tile placements (where N = 1 .. 31);
