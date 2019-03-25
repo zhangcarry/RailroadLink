@@ -95,7 +95,11 @@ public class RailroadInk {
      */
     public static boolean isValidPlacementSequence(String boardString) {
         // FIXME Task 6: determine whether the given placement sequence is valid
-
+        boolean isConnectToExit; //to check whether the placement connect to Exit
+        boolean isExitConnectionValid; //to check whether the placement connects to Exit successfully
+        boolean isConnectToRoute; //to check whether the placement connects to the route
+        boolean isValidConnection; //to check whether it is a valid connection
+        boolean aredisconnectedLegal; //check whether the placements are connected in the legal way.
         return false;
     }
 
