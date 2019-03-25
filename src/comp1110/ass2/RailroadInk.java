@@ -117,8 +117,8 @@ public class RailroadInk {
     public static String generateDiceRoll() {
         // FIXME Task 7: generate a dice roll
         Random random = new Random(); // Creating the generator.
-        Integer faceA = (random.nextInt(6) + 0); // The generator for die A
-        Integer faceB = (random.nextInt(3) + 0); // The generator for die B
+        Integer faceA = (random.nextInt(6)); // The generator for die A
+        Integer faceB = (random.nextInt(3)); // The generator for die B
         int counta; // Counting how many times die A has been rolled, making sure counta is equal to 3 at the end.
         int countb; // Counting how many times die B has been rolled, making sure counta is equal to 1 at the end.
         return "";
@@ -137,6 +137,10 @@ public class RailroadInk {
      */
     public static int getBasicScore(String boardString) {
         // FIXME Task 8: compute the basic score
+        int exitScores; // Calculate the exit scores in current board.
+        int centreTiles; // Number of centre tiles used, also the score should be awarded.
+        int deadEnds; // Number of dead ends exists in the game state, the score should be deducted from the game.
+        // return (exitScores + centreTiles - deadEnds)
         return -1;
     }
 
@@ -150,6 +154,7 @@ public class RailroadInk {
      */
     public static String generateMove(String boardString, String diceRoll) {
         // FIXME Task 10: generate a valid move
+        Random random = new Random(); // Creating the generator.
         return null;
     }
 
