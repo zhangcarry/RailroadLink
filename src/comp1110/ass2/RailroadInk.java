@@ -1,5 +1,7 @@
 package comp1110.ass2;
 
+import javax.imageio.plugins.tiff.TIFFDirectory;
+import java.awt.font.FontRenderContext;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -52,10 +54,44 @@ public class RailroadInk {
      */
     public static boolean isBoardStringWellFormed(String boardString) {
         // FIXME Task 3: determine whether a board string is well-formed
+        //boolean noEmpty = false;
+        boolean isPeaceFormatted = false;
+        boolean isLengthFormatted = false;
+        boolean areTilesValid = false;
+        int count = 0;
+
+        if ( boardString != "" && boardString != null){
+            if (boardString.length() > 0 && boardString.length() <= 31*5 && boardString.length() % 5 == 0){
+                isLengthFormatted = true;
+            }
+
+            if (isLengthFormatted){
+                for (int j = 0; j < boardString.length() - 4; j+=5){
+                    if (isTilePlacementWellFormed(boardString.substring(j, j+5))){
+                        isPeaceFormatted = true;
+                    }
+                }
+            }
+
+            for (int i = 0; i < boardString.length(); i+=5){
+                if (boardString.charAt(i) == 'S'){
+                    count++;
+                }
+            }
+            if (count <= 3){
+                areTilesValid = true;
+            }
+            return (isLengthFormatted && isPeaceFormatted && areTilesValid);
+        }else{
+            return false;
+        }
+
+        /*
         boolean isLengthFormatted; // Check if the length is formatted to N five-character sets
         boolean isPieceFormatted; // Check if each set is well-formatted
         boolean areTilesValid; // Check to make sure there are no more than 3 sets with special tiles.
         return false;
+        */
     }
 
 
@@ -70,13 +106,198 @@ public class RailroadInk {
      *
      * @return true if the placements are connected neighbours
      */
+    //construct a method to replace the similar tiles.
+    public static String replace(String a){
+        String tile = a.substring(0,2);
+        String ori = a.substring(2);
+        StringBuilder replace = new StringBuilder(a);
+        if (tile.equals("S0")||tile.equals("S1")||tile.equals("B0")){
+            if (ori.equals("7")){replace.setCharAt(2, '3');}
+            if (ori.equals("6")){replace.setCharAt(2, '2');}
+            if (ori.equals("5")){replace.setCharAt(2,'1');}
+            if (ori.equals("4")){replace.setCharAt(2,'0');}
+        }else if (tile.equals("S2")||tile.equals("S3")){
+            replace.setCharAt(2,'0');
+        }else if(tile.equals("S4")||tile.equals("A0")||tile.equals("A5")){
+            if (ori.equals("7")){replace.setCharAt(2,'0');}
+            if (ori.equals("6")){replace.setCharAt(2,'3');}
+            if (ori.equals("5")){replace.setCharAt(2,'2');}
+            if (ori.equals("4")){replace.setCharAt(2,'1');}
+        }else if(tile.equals("S5")||tile.equals("A1")||tile.equals("A4")||tile.equals("B2")){
+            if (ori.equals("2")){replace.setCharAt(2,'0');}
+            if (ori.equals("3")){replace.setCharAt(2,'1');}
+            if (ori.equals("4")){replace.setCharAt(2,'0');}
+            if (ori.equals("5")){replace.setCharAt(2,'1');}
+            if (ori.equals("6")){replace.setCharAt(2,'0');}
+            if (ori.equals("7")){replace.setCharAt(2,'1');}
+        }else if(tile.equals("A2")||tile.equals("A3")){
+            if (ori.equals("7")){replace.setCharAt(2,'1');}
+            if (ori.equals("6")){replace.setCharAt(2,'0');}
+            if (ori.equals("5")){replace.setCharAt(2,'3');}
+            if (ori.equals("4")){replace.setCharAt(2,'2');}
+        }
+        return replace.toString();
+    }
+    //construct a method to determine the position of A and B
+    public static String position(String a, String b){
+        String position = "Not connected";
+        if (a.charAt(0) >= 'A' && b.charAt(0) >= 'A' && a.charAt(0) <= 'G' && b.charAt(0) <= 'G' &&
+                a.charAt(1) >= '0' && b.charAt(1) >= '0' && a.charAt(1) <= '6' && b.charAt(1) <= '6'){
+            if (a.charAt(0)==b.charAt(0)){
+                if (a.charAt(1) == b.charAt(1) + 1){
+                    position = "A is in the right side of B";
+                }else if (a.charAt(1) == b.charAt(1) - 1){
+                    position = "A is in the left side of B";
+                }
+            }else if (a.charAt(1) == b.charAt(1)){
+                if (a.charAt(0) == b.charAt(0) + 1){
+                    position = "A is in the downside of B";
+                }else if(a.charAt(0) == b.charAt(0) - 1){
+                    position = "A is in the upside of B";
+                }
+        }
+    } return position;
+    }
     public static boolean areConnectedNeighbours(String tilePlacementStringA, String tilePlacementStringB) {
         // FIXME Task 5: determine whether neighbouring placements are connected
+        boolean isPositionConnected = false;
+        boolean areTypesValid = true;
+        boolean areOriConnected = false;
+        //determine the places that tiles in.
+
+        /*
+        if (tilePlacementStringA.charAt(2) == tilePlacementStringB.charAt(2)){
+            if(tilePlacementStringA.charAt(3) == tilePlacementStringB.charAt(3) + 1
+                    || tilePlacementStringA.charAt(3) == tilePlacementStringB.charAt(3) - 1){
+                isPositionConnected = true;
+            };
+            }
+        else if (tilePlacementStringA.charAt(3) == tilePlacementStringB.charAt(3)){
+            if (tilePlacementStringA.charAt(2) == tilePlacementStringA.charAt(2) + 1
+                    ||tilePlacementStringA.charAt(2) == tilePlacementStringB.charAt(2) - 1){
+                isPositionConnected = true;
+            };
+        }
+        */
+        /*
+        String[] noRailway = {"S2", "A3", "A4", "A5"};
+        String[] noHighway = {"S3", "A0", "A1", "A2"};
+        String[] tileA = new String[1];
+        String[] tileB = new String[1];
+        tileA[0] = String.valueOf(tilePlacementStringA.charAt(0) + tilePlacementStringA.charAt(1));
+        tileB[0] = String.valueOf(tilePlacementStringB.charAt(0) + tilePlacementStringB.charAt(1));
+        for (int i = 0; i < 5; i++) {
+            if (tileA[0].equals(noRailway[i])) {
+                for (int j = 0; j < 5; j++) {
+                    if (tileB[0].equals(noHighway[j])) {
+                        areTypesValid = false;
+                        break;
+                    }
+                }
+            } else if (tileB[0].equals(noRailway[i])) {
+                for (int j = 0; j < 5; j++) {
+                    if (tileA[0].equals(noHighway[i])) {
+                        areTypesValid = false;
+                        break;
+                    }
+                }
+            }
+        }
+        */
+
+
+        //create several String Array to group different types of tiles
+        String[] upHighway =
+                {"S00", "S01", "S03", "S10", "S20", "S40", "S41", "S50", "A30", "A32", "A33", "A40", "A50", "A51", "B00", "B10", "B14", "B20"};
+        String[] downHighway =
+                {"S01", "S02", "S03", "S12", "S20", "S42", "S43", "S50", "A30", "A31", "A32", "A40", "A52", "A53", "B02", "B12", "B16", "B20"};
+        String[] upRailway =
+                {"S02", "S11", "S12", "S13", "S30", "S42", "S43", "S51", "A00", "A01", "A10", "A20", "A22", "A23", "B02", "B13", "B15", "B21"};
+        String[] downRailway =
+                {"S00", "S10", "S11", "S13", "S30", "S40", "S41", "S51", "A02", "A03", "A10", "A20", "A21", "A22", "B00", "B11", "B17", "B21"};
+        String[] rightHighway =
+                {"S00", "S01", "S02", "S11", "S20", "S41", "S42", "S51", "A30", "A31", "A33", "A41", "A51", "A52", "B01", "B11", "B15", "B21"};
+        String[] leftHighway =
+                {"S00", "S02", "S03", "S13", "S20", "S40", "S43", "S51", "A31", "A32", "A33", "A41", "A50", "A53", "B03", "B13", "B17", "B21"};
+        String[] rightRailway =
+                {"S03", "S10", "S12", "S13", "S30", "S40", "S43", "S50", "A01", "A02", "A11", "A20", "A21", "A23", "B03", "B10", "B16", "B20"};
+        String[] leftRailway =
+                {"S01", "S10", "S11", "S12", "S30", "S41", "S42", "S50", "A00", "A03", "A11", "A21", "A22", "A23", "B01", "B12", "B14", "B20"};
+
+        String oriTileA = tilePlacementStringA.substring(0, 2) + tilePlacementStringA.substring(4);
+        String oriTileB = tilePlacementStringB.substring(0, 2) + tilePlacementStringB.substring(4);
+        String oriTileNA = replace(oriTileA);
+        String oriTileNB = replace(oriTileB);
+        String positionA = tilePlacementStringA.substring(2, 4);
+        String positionB = tilePlacementStringB.substring(2, 4);
+        //determine whether two tiles are connected successfully
+        if (!position(positionA, positionB).equals("Not connected")){
+            isPositionConnected = true;
+            if (position(positionA, positionB).equals("A is in the right side of B")) {
+                for (String a: leftHighway) {
+                    for (String b: rightHighway){
+                        if(a.equals(oriTileNA)&&b.equals(oriTileNB)){
+                            areOriConnected = true;
+                        }}}
+                for (String a: leftRailway){
+                    for (String b: rightRailway){
+                        if (a.equals(oriTileNA)&&b.equals(oriTileNB)){
+                            areOriConnected = true;
+                }}}
+            }else if (position(positionA, positionB).equals("A is in the left side of B")){
+                for (String a: leftRailway){
+                    for (String b: rightRailway){
+                        if (a.equals(oriTileNB)&&b.equals(oriTileNA)){
+                            areOriConnected = true;
+                        }
+                    }
+                }
+                for (String a: leftHighway){
+                    for (String b: rightHighway){
+                        if (a.equals(oriTileNB)&&b.equals(oriTileNA)){
+                            areOriConnected = true;
+                        }
+                    }
+                }
+            } else if (position(positionA, positionB).equals("A is in the downside of B")) {
+                for (String a: upHighway){
+                    for (String b: downHighway){
+                        if (a.equals(oriTileNA)&&b.equals(oriTileNB)){
+                            areOriConnected = true;
+                        }
+                    }
+                }
+                for (String a: upRailway){
+                    for (String b: downRailway){
+                        if (a.equals(oriTileNA)&&b.equals(oriTileNB));
+                    }
+                }
+            } else if (position(positionA, positionB).equals("A is in the upside of B")) {
+                for (String a: upHighway){
+                    for (String b: downHighway){
+                        if (a.equals(oriTileNB)&&b.equals(oriTileNA)){
+                            areOriConnected = true;
+                        }
+                    }
+                }
+                for (String a: upRailway){
+                    for (String b: downRailway){
+                        if (a.equals(oriTileNB)&&b.equals(oriTileNA)){
+                            areOriConnected = true;
+                        }
+                    }
+                }
+        } }
+        return isPositionConnected && areOriConnected;
+    }
+
+
+        /*
         boolean isPositionConnected; // Check if either two placements' row or column are the same, but not both.
         boolean areTypesValid; // Check if highway pieces are connected to highway pieces, not railway pieces.
         boolean areOriConnected; // Check if orientations' of both pieces can indeed be connected.
         return false;
-    }
+        */
 
     /**
      * Given a well-formed board string representing an ordered list of placements,
@@ -96,11 +317,13 @@ public class RailroadInk {
      */
     public static boolean isValidPlacementSequence(String boardString) {
         // FIXME Task 6: determine whether the given placement sequence is valid
+            /*
         boolean isConnectToExit; //to check whether the placement connect to Exit
         boolean isExitConnectionValid; //to check whether the placement connects to Exit successfully
         boolean isConnectToRoute; //to check whether the placement connects to the route
         boolean isValidConnection; //to check whether it is a valid connection
         boolean aredisconnectedLegal; //check whether the placements are connected in the legal way.
+        */
         return false;
     }
 
@@ -116,11 +339,13 @@ public class RailroadInk {
      */
     public static String generateDiceRoll() {
         // FIXME Task 7: generate a dice roll
+        /*
         Random random = new Random(); // Creating the generator.
         Integer faceA = (random.nextInt(6)); // The generator for die A
         Integer faceB = (random.nextInt(3)); // The generator for die B
         int counta; // Counting how many times die A has been rolled, making sure counta is equal to 3 at the end.
         int countb; // Counting how many times die B has been rolled, making sure counta is equal to 1 at the end.
+        */
         return "";
     }
 
@@ -137,10 +362,12 @@ public class RailroadInk {
      */
     public static int getBasicScore(String boardString) {
         // FIXME Task 8: compute the basic score
+        /*
         int exitScores; // Calculate the exit scores in current board.
         int centreTiles; // Number of centre tiles used, also the score should be awarded.
         int deadEnds; // Number of dead ends exists in the game state, the score should be deducted from the game.
         // return (exitScores + centreTiles - deadEnds)
+        */
         return -1;
     }
 
@@ -154,10 +381,12 @@ public class RailroadInk {
      */
     public static String generateMove(String boardString, String diceRoll) {
         // FIXME Task 10: generate a valid move
+        /*
         Random random = new Random(); // Creating the generator.
         boolean formed = isBoardStringWellFormed(boardString); // Check if the boardString input is formed.
         String [] placements; // An array of valid placement for the round.
         String placementsStr; // The string of valid placements.
+        */
         return null;
     }
 
@@ -173,11 +402,13 @@ public class RailroadInk {
      */
     public static int getAdvancedScore(String boardString) {
         // FIXME Task 12: compute the total score including bonus points
+        /*
         int longestRailroad; //longestRailroad parameter
         boolean longestRailroadScore; //calculate the bonus score for the longest Railroad
         int longestHighway; //longestHighway parameter
         boolean longestHighwayScore; //calculate the bonus score for the longest highway
         int finalScore; //final scores parameter
+        */
         return -1;
     }
 }
