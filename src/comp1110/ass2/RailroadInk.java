@@ -161,50 +161,7 @@ public class RailroadInk {
     public static boolean areConnectedNeighbours(String tilePlacementStringA, String tilePlacementStringB) {
         // FIXME Task 5: determine whether neighbouring placements are connected
         boolean isPositionConnected = false;
-        boolean areTypesValid = true;
         boolean areOriConnected = false;
-        //determine the places that tiles in.
-
-        /*
-        if (tilePlacementStringA.charAt(2) == tilePlacementStringB.charAt(2)){
-            if(tilePlacementStringA.charAt(3) == tilePlacementStringB.charAt(3) + 1
-                    || tilePlacementStringA.charAt(3) == tilePlacementStringB.charAt(3) - 1){
-                isPositionConnected = true;
-            };
-            }
-        else if (tilePlacementStringA.charAt(3) == tilePlacementStringB.charAt(3)){
-            if (tilePlacementStringA.charAt(2) == tilePlacementStringA.charAt(2) + 1
-                    ||tilePlacementStringA.charAt(2) == tilePlacementStringB.charAt(2) - 1){
-                isPositionConnected = true;
-            };
-        }
-        */
-        /*
-        String[] noRailway = {"S2", "A3", "A4", "A5"};
-        String[] noHighway = {"S3", "A0", "A1", "A2"};
-        String[] tileA = new String[1];
-        String[] tileB = new String[1];
-        tileA[0] = String.valueOf(tilePlacementStringA.charAt(0) + tilePlacementStringA.charAt(1));
-        tileB[0] = String.valueOf(tilePlacementStringB.charAt(0) + tilePlacementStringB.charAt(1));
-        for (int i = 0; i < 5; i++) {
-            if (tileA[0].equals(noRailway[i])) {
-                for (int j = 0; j < 5; j++) {
-                    if (tileB[0].equals(noHighway[j])) {
-                        areTypesValid = false;
-                        break;
-                    }
-                }
-            } else if (tileB[0].equals(noRailway[i])) {
-                for (int j = 0; j < 5; j++) {
-                    if (tileA[0].equals(noHighway[i])) {
-                        areTypesValid = false;
-                        break;
-                    }
-                }
-            }
-        }
-        */
-
 
         //create several String Array to group different types of tiles
         String[] upHighway =
@@ -269,7 +226,9 @@ public class RailroadInk {
                 }
                 for (String a: upRailway){
                     for (String b: downRailway){
-                        if (a.equals(oriTileNA)&&b.equals(oriTileNB));
+                        if (a.equals(oriTileNA)&&b.equals(oriTileNB)){
+                            areOriConnected = true;
+                        }
                     }
                 }
             } else if (position(positionA, positionB).equals("A is in the upside of B")) {
@@ -291,13 +250,7 @@ public class RailroadInk {
         return isPositionConnected && areOriConnected;
     }
 
-
-        /*
-        boolean isPositionConnected; // Check if either two placements' row or column are the same, but not both.
-        boolean areTypesValid; // Check if highway pieces are connected to highway pieces, not railway pieces.
-        boolean areOriConnected; // Check if orientations' of both pieces can indeed be connected.
-        return false;
-        */
+        //return false;
 
     /**
      * Given a well-formed board string representing an ordered list of placements,
