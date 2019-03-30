@@ -6,7 +6,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 
 // import javafx.scene.image.Image ; Adding images of placements to the stage.
@@ -35,10 +38,84 @@ public class Viewer extends Application {
      */
     void makePlacement(String placement) {
         // FIXME Task 4: implement the simple placement viewer
-        boolean isPlacementValid; // Check if the given placement is valid.
-        // emptyScene() Empty any existing placements from the viewer.
-        // getPlacement() Import placement from assets package.
-        // addPlacement() Adding placement from the viewer.
+        String piece = placement.substring(0,2);
+        char ori = placement.charAt(4);
+        char layOutY = placement.charAt(2);
+        char layOutX = placement.charAt(3);
+        int oriFX = 0;
+        int layOutXFX = 0;
+        int layOutYFX = 0;
+        String PIECE_LOCATION = "comp1110/ass2/gui/assets/" + piece + ".png";
+        Image img = new Image(PIECE_LOCATION);
+        HBox hb = new HBox();
+        ImageView imgV = new ImageView(img);
+        imgV.setFitHeight(100);
+        imgV.setFitWidth(100);
+        if (ori == '1') {
+            oriFX = 90;
+        }
+        if (ori == '2') {
+            oriFX = 180;
+        }
+        if (ori == '3') {
+            oriFX = 270;
+        }
+        if (ori == '4') {
+            imgV.setRotationAxis(Rotate.Y_AXIS);
+        }
+        if (ori == '5') {
+            imgV.setRotationAxis(Rotate.Y_AXIS);
+            oriFX = 90;
+        }
+        if (ori == '6') {
+            imgV.setRotationAxis(Rotate.Y_AXIS);
+            oriFX = 180;
+        }
+        if (ori == '7') {
+            imgV.setRotationAxis(Rotate.Y_AXIS);
+            oriFX = 270;
+        }
+        if (layOutX == '2') {
+            layOutXFX = 100;
+        }
+        if (layOutX == '3') {
+            layOutXFX = 200;
+        }
+        if (layOutX == '4') {
+            layOutXFX = 300;
+        }
+        if (layOutX == '5') {
+            layOutXFX = 400;
+        }
+        if (layOutX == '6') {
+            layOutXFX = 500;
+        }
+        if (layOutX == '7') {
+            layOutXFX = 600;
+        }
+        if (layOutY == 'B') {
+            layOutYFX = 100;
+        }
+        if (layOutY == 'C') {
+            layOutYFX = 200;
+        }
+        if (layOutY == 'D') {
+            layOutYFX = 300;
+        }
+        if (layOutY == 'E') {
+            layOutYFX = 400;
+        }
+        if (layOutY == 'F') {
+            layOutYFX = 500;
+        }
+        if (layOutY == 'G') {
+            layOutYFX = 600;
+        }
+        hb.setLayoutX(layOutXFX);
+        hb.setLayoutY(layOutYFX);
+        imgV.setRotate(oriFX);
+        hb.getChildren().addAll(imgV);
+        controls.getChildren().add(hb);
     }
 
     /**
