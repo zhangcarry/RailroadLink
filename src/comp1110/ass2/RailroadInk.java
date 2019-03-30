@@ -2,8 +2,7 @@ package comp1110.ass2;
 
 import javax.imageio.plugins.tiff.TIFFDirectory;
 import java.awt.font.FontRenderContext;
-import java.util.Arrays;
-import java.util.Random;
+import java.util.*;
 
 public class RailroadInk {
     public static boolean isFaceValid(String tilePlacementString) {
@@ -277,7 +276,7 @@ public class RailroadInk {
         }
         String[] roots={"S2@10","S2@50","S3@30","S3B/0","S3B70","S2D/0","S2D70","S3F/0","S3F70","S2H10","S3H30","S2H50"};
         Set<String> in = new HashSet<>(Arrays.asList(roots));
-<<<<<<< HEAD
+
         
 
         for (String board:boards){
@@ -295,12 +294,27 @@ public class RailroadInk {
             }
           }
         }
+        int pre=boards.size();
+        int now=-1;
+        while (pre!=now){
+          pre=boards.size();
+          List<String> rm=new ArrayList<>();
+          for (String board:boards){
+            for (String s: in){
+              if (areConnectedNeighbours(s,board)) {
+                rm.add(board);
+              }
+            }
+            in.addAll(rm);
+          }
+          boards.removeAll(rm);
+          now=boards.size();
+        }
+        if (boards.size()!=0){
+          return false;
+        }
+        return true;
 
-        
-=======
-
->>>>>>> 4578de92b9b2df2056cd65720f32b2d224fe5c2d
-        return false;
     }
 
     /**
