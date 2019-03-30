@@ -270,13 +270,13 @@ public class RailroadInk {
      */
     public static boolean isValidPlacementSequence(String boardString) {
         // FIXME Task 6: determine whether the given placement sequence is valid
-            /*
-        boolean isConnectToExit; //to check whether the placement connect to Exit
-        boolean isExitConnectionValid; //to check whether the placement connects to Exit successfully
-        boolean isConnectToRoute; //to check whether the placement connects to the route
-        boolean isValidConnection; //to check whether it is a valid connection
-        boolean aredisconnectedLegal; //check whether the placements are connected in the legal way.
-        */
+        List<String> boards=new ArrayList<>();
+        for (int i = 0 ; i < boardString.length(); i=i+5) {
+            boards.add(boardString.substring(i,i+5));
+        }
+        String[] roots={"S2@10","S2@50","S3@30","S3B/0","S3B70","S2D/0","S2D70","S3F/0","S3F70","S2H10","S3H30","S2H50"};
+        Set<String> in = new HashSet<>(Arrays.asList(roots));
+        
         return false;
     }
 
