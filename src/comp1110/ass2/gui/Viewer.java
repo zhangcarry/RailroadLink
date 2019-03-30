@@ -28,6 +28,7 @@ public class Viewer extends Application {
     private static final String URI_BASE = "assets/";
 
     private final Group root = new Group();
+    private final Group images = new Group(); // New group for placements
     private final Group controls = new Group();
     TextField textField;
 
@@ -38,6 +39,7 @@ public class Viewer extends Application {
      */
     void makePlacement(String placement) {
         // FIXME Task 4: implement the simple placement viewer
+        images.getChildren().clear();
         String piece = placement.substring(0,2);
         char ori = placement.charAt(4);
         char layOutY = placement.charAt(2);
@@ -115,7 +117,7 @@ public class Viewer extends Application {
         hb.setLayoutY(layOutYFX);
         imgV.setRotate(oriFX);
         hb.getChildren().addAll(imgV);
-        controls.getChildren().add(hb);
+        images.getChildren().add(hb);
     }
 
     /**
@@ -143,7 +145,7 @@ public class Viewer extends Application {
         primaryStage.setTitle("StepsGame Viewer");
         Scene scene = new Scene(root, VIEWER_WIDTH, VIEWER_HEIGHT);
 
-        root.getChildren().add(controls);
+        root.getChildren().addAll(controls,images);
 
         makeControls();
 
