@@ -148,7 +148,7 @@ public class Viewer extends Application {
         primaryStage.setTitle("StepsGame Viewer");
         Scene scene = new Scene(root, VIEWER_WIDTH, VIEWER_HEIGHT);
 
-        root.getChildren().addAll(controls,images);
+        root.getChildren().addAll(controls,images); // Adding group images to group root
 
         makeControls();
 
