@@ -1,6 +1,7 @@
 package comp1110.ass2.gui;
 
 import javafx.application.Application;
+import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -45,6 +46,7 @@ public class Viewer extends Application {
         char layOutY = placement.charAt(2);
         char layOutX = placement.charAt(3);
         int oriFX = 0;
+        int rotateFX = 1;
         int layOutXFX = 0;
         int layOutYFX = 0;
         String PIECE_LOCATION = "comp1110/ass2/gui/assets/" + piece + ".png";
@@ -53,30 +55,6 @@ public class Viewer extends Application {
         ImageView imgV = new ImageView(img);
         imgV.setFitHeight(100);
         imgV.setFitWidth(100);
-        if (ori == '1') {
-            oriFX = 90;
-        }
-        if (ori == '2') {
-            oriFX = 180;
-        }
-        if (ori == '3') {
-            oriFX = 270;
-        }
-        if (ori == '4') {
-            imgV.setRotationAxis(Rotate.Y_AXIS);
-        }
-        if (ori == '5') {
-            imgV.setRotationAxis(Rotate.Y_AXIS);
-            oriFX = 90;
-        }
-        if (ori == '6') {
-            imgV.setRotationAxis(Rotate.Y_AXIS);
-            oriFX = 180;
-        }
-        if (ori == '7') {
-            imgV.setRotationAxis(Rotate.Y_AXIS);
-            oriFX = 270;
-        }
         if (layOutX == '2') {
             layOutXFX = 100;
         }
@@ -113,8 +91,33 @@ public class Viewer extends Application {
         if (layOutY == 'G') {
             layOutYFX = 600;
         }
+        if (ori == '1') {
+            oriFX = 90;
+        }
+        if (ori == '2') {
+            oriFX = 180;
+        }
+        if (ori == '3') {
+            oriFX = 270;
+        }
+        if (ori == '4') {
+            rotateFX = -1;
+        }
+        if (ori == '5') {
+            rotateFX = -1;
+            oriFX = 90;
+        }
+        if (ori == '6') {
+            rotateFX = -1;
+            oriFX = 180;
+        }
+        if (ori == '7') {
+            rotateFX = -1;
+            oriFX = 270;
+        }
         hb.setLayoutX(layOutXFX);
         hb.setLayoutY(layOutYFX);
+        imgV.setScaleX(rotateFX);
         imgV.setRotate(oriFX);
         hb.getChildren().addAll(imgV);
         images.getChildren().add(hb);
