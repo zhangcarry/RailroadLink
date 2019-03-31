@@ -140,8 +140,8 @@ public class RailroadInk {
     //construct a method to determine the position of A and B
     public static String position(String a, String b){
         String position = "Not connected";
-        if (a.charAt(0) >= 'A' && b.charAt(0) >= 'A' && a.charAt(0) <= 'G' && b.charAt(0) <= 'G' &&
-                a.charAt(1) >= '0' && b.charAt(1) >= '0' && a.charAt(1) <= '6' && b.charAt(1) <= '6'){
+        if (a.charAt(0) >= 'A'-1 && b.charAt(0) >= 'A'-1 && a.charAt(0) <= 'G'+1 && b.charAt(0) <= 'G'+1 &&
+                a.charAt(1) >= '0'-1 && b.charAt(1) >= '0'-1 && a.charAt(1) <= '6'+1 && b.charAt(1) <= '6'+1){
             if (a.charAt(0)==b.charAt(0)){
                 if (a.charAt(1) == b.charAt(1) + 1){
                     position = "A is in the right side of B";
