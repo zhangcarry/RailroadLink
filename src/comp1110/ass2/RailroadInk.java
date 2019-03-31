@@ -269,15 +269,12 @@ public class RailroadInk {
      */
     public static boolean isValidPlacementSequence(String boardString) {
         // FIXME Task 6: determine whether the given placement sequence is valid
-
         List<String> boards=new ArrayList<>();
         for (int i = 0 ; i < boardString.length(); i=i+5) {
-            boards.add(boardString.substring(i,i+5));
+          boards.add(boardString.substring(i,i+5));
         }
         String[] roots={"S2@10","S2@50","S3@30","S3B/0","S3B70","S2D/0","S2D70","S3F/0","S3F70","S2H10","S3H30","S2H50"};
         Set<String> in = new HashSet<>(Arrays.asList(roots));
-
-        
 
         for (String board:boards){
           if (((board.charAt(2)=='A'||board.charAt(2)=='G')&&(board.charAt(3)=='1'||board.charAt(3)=='3'||board.charAt(3)=='5'))
@@ -314,7 +311,6 @@ public class RailroadInk {
           return false;
         }
         return true;
-
     }
 
     /**
