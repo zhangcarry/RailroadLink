@@ -140,8 +140,8 @@ public class RailroadInk {
     //construct a method to determine the position of A and B
     public static String position(String a, String b){
         String position = "Not connected";
-        if (a.charAt(0) >= 'A' && b.charAt(0) >= 'A' && a.charAt(0) <= 'G' && b.charAt(0) <= 'G' &&
-                a.charAt(1) >= '0' && b.charAt(1) >= '0' && a.charAt(1) <= '6' && b.charAt(1) <= '6'){
+        if (a.charAt(0) >= 'A'-1 && b.charAt(0) >= 'A'-1 && a.charAt(0) <= 'G'+1 && b.charAt(0) <= 'G'+1 &&
+                a.charAt(1) >= '0'-1 && b.charAt(1) >= '0'-1 && a.charAt(1) <= '6'+1 && b.charAt(1) <= '6'+1){
             if (a.charAt(0)==b.charAt(0)){
                 if (a.charAt(1) == b.charAt(1) + 1){
                     position = "A is in the right side of B";
@@ -269,15 +269,12 @@ public class RailroadInk {
      */
     public static boolean isValidPlacementSequence(String boardString) {
         // FIXME Task 6: determine whether the given placement sequence is valid
-
         List<String> boards=new ArrayList<>();
         for (int i = 0 ; i < boardString.length(); i=i+5) {
-            boards.add(boardString.substring(i,i+5));
+          boards.add(boardString.substring(i,i+5));
         }
         String[] roots={"S2@10","S2@50","S3@30","S3B/0","S3B70","S2D/0","S2D70","S3F/0","S3F70","S2H10","S3H30","S2H50"};
         Set<String> in = new HashSet<>(Arrays.asList(roots));
-
-        
 
         for (String board:boards){
           if (((board.charAt(2)=='A'||board.charAt(2)=='G')&&(board.charAt(3)=='1'||board.charAt(3)=='3'||board.charAt(3)=='5'))
@@ -314,7 +311,6 @@ public class RailroadInk {
           return false;
         }
         return true;
-
     }
 
     /**
