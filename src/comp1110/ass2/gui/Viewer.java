@@ -1,7 +1,6 @@
 package comp1110.ass2.gui;
 
 import javafx.application.Application;
-import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
