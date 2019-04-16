@@ -163,43 +163,25 @@ public class RailroadInk {
     */
     public static boolean areConnectedNeighbours(String tilePlacementStringA, String tilePlacementStringB) {
         // FIXME Task 5: determine whether neighbouring placements are connected
-        boolean connected = false;
-        unRotatedState u = new unRotatedState();
-        String UA = u.unRotated(tilePlacementStringA);
-        String UB = u.unRotated(tilePlacementStringB);
-
+        //boolean connected = false;
+        Placement p = new Placement();
+        String A = p.replace(tilePlacementStringA);
+        String B = p.replace(tilePlacementStringB);
         Board b = new Board();
         String position = b.neighbored(tilePlacementStringA, tilePlacementStringB);
-
-        Rotate r = new Rotate();
-        String sA = r.rotate(tilePlacementStringA, UA);
-        String sB = r.rotate(tilePlacementStringB, UB);
-
         if (!position.equals("Not Connected")){
             switch (position){
                 case "A is in the right side of B":
-                    if (sA.charAt(3) != '0' && sB.charAt(1) != 0){
-                        connected = (sA.charAt(3) == sB.charAt(1));
-                    }
-                    break;
+                    return A.charAt(3) == B.charAt(1) && A.charAt(3) != '0';
                 case "A is in the left side of B":
-                    if (sA.charAt(1) != '0' && sB.charAt(3) != '0'){
-                        connected = (sA.charAt(1) == sB.charAt(3));
-                    }
-                    break;
+                    return A.charAt(1) == B.charAt(3) && A.charAt(1) != '0';
                 case "A is in the downside of B":
-                    if (sA.charAt(0) != '0' && sB.charAt(2) != '0'){
-                        connected = (sA.charAt(0) == sB.charAt(2));
-                    }
-                    break;
+                    return A.charAt(0) == B.charAt(2) && A.charAt(0) != '0';
                 case "A is in the upside of B":
-                    if (sA.charAt(2) != '0' && sB.charAt(0) != '0'){
-                        connected = (sA.charAt(2) == sB.charAt(0));
-                    }
-                    break;
+                    return A.charAt(2) == B.charAt(0) && A.charAt(2) != '0';
             }
         }
-        return connected;
+        return false;
         //past:
         /*
         boolean isPositionConnected = false;
