@@ -1,7 +1,7 @@
 package comp1110.ass2;
 
 public class Board {
-    private String Position;
+    //find the position of two tiles
     public String neighbored(String a, String b){
         String position = "Not connected";
         if (a.charAt(2) >= 'A'-1 && b.charAt(2) >= 'A'-1 && a.charAt(2) <= 'G'+1 && b.charAt(2) <= 'G'+1 &&
@@ -19,7 +19,8 @@ public class Board {
                     position = "A is in the upside of B";
                 }
             }
-        } return position;
+        }
+        return position;
     }
 }
 
