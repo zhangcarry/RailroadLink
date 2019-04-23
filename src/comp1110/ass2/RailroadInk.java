@@ -110,8 +110,7 @@ public class RailroadInk {
         Placement p = new Placement();
         String A = p.replace(tilePlacementStringA);
         String B = p.replace(tilePlacementStringB);
-        Board b = new Board();
-        String position = b.neighbored(tilePlacementStringA, tilePlacementStringB);
+        String position = Board.neighbored(tilePlacementStringA, tilePlacementStringB);
         if (!position.equals("Not Connected")) {
             if (position.equals("A is in the right side of B")) {
                 return A.charAt(3) == B.charAt(1) && A.charAt(3) != '0';
@@ -203,15 +202,23 @@ public class RailroadInk {
      */
     public static String generateDiceRoll() {
         // FIXME Task 7: generate a dice roll
-        /*
-        Random random = new Random(); // Creating the generator.
-        Integer faceA = (random.nextInt(6)); // The generator for die A
-        Integer faceB = (random.nextInt(3)); // The generator for die B
-        int counta; // Counting how many times die A has been rolled, making sure counta is equal to 3 at the end.
-        int countb; // Counting how many times die B has been rolled, making sure counta is equal to 1 at the end.
-        */
-        return "";
+        Random random = new Random();
+        int p = random.nextInt(4);
+        String[] c = new String[4];
+        for (int i = 0; i<=3; i++){
+            if (i == p){
+                c[i] ="B" + random.nextInt(3);
+            }else{
+                c[i] = "A" + random.nextInt(6);
+            }
+        }
+        String a = "";
+        for (String i: c){
+             a += i;
+        }
+        return a;
     }
+
 
     /**
      * Given the current state of a game board, output an integer representing the sum of all the following factors
@@ -226,14 +233,9 @@ public class RailroadInk {
      */
     public static int getBasicScore(String boardString) {
         // FIXME Task 8: compute the basic score
-        /*
-        int exitScores; // Calculate the exit scores in current board.
-        int centreTiles; // Number of centre tiles used, also the score should be awarded.
-        int deadEnds; // Number of dead ends exists in the game state, the score should be deducted from the game.
-        // return (exitScores + centreTiles - deadEnds)
-        */
-        return -1;
+        return 0;
     }
+
 
     /**
      * Given a valid boardString and a dice roll for the round,
