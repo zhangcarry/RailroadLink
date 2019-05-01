@@ -40,20 +40,20 @@ public class Viewer extends Application {
     void makePlacement(String placement) {
         // FIXME Task 4: implement the simple placement viewer
         images.getChildren().clear();
-        for (int i = 0; i < placement.length(); i = i + 5) {
+        for (int i = 0; i < placement.length(); i = i + 5) { // Now updated for multi-piece support
             String piece = placement.substring(i,i + 2);
             char ori = placement.charAt(i + 4);
             char layOutY = placement.charAt(i + 2);
             char layOutX = placement.charAt(i + 3);
-            int oriFX = 0;
-            int rotateFX = 1;
+            int oriFX = 0; // Default value for rotation
+            int rotateFX = 1; // Default value for the flip, 1 indicates no flipping involved
             int layOutXFX = 0;
             int layOutYFX = 0;
-            String PIECE_LOCATION = "comp1110/ass2/gui/assets/" + piece + ".png";
+            String PIECE_LOCATION = "comp1110/ass2/gui/assets/" + piece + ".png"; // Defining the location of images
             Image img = new Image(PIECE_LOCATION);
             HBox hb = new HBox();
             ImageView imgV = new ImageView(img);
-            imgV.setFitHeight(100);
+            imgV.setFitHeight(100); // Defining the Height and Width of the image
             imgV.setFitWidth(100);
             if (layOutX == '2') {
                 layOutXFX = 100;
@@ -117,10 +117,10 @@ public class Viewer extends Application {
             }
             hb.setLayoutX(layOutXFX);
             hb.setLayoutY(layOutYFX);
-            imgV.setScaleX(rotateFX);
-            imgV.setRotate(oriFX);
-            hb.getChildren().addAll(imgV);
-            images.getChildren().add(hb);
+            imgV.setScaleX(rotateFX); // The scaling controls for flipping images
+            imgV.setRotate(oriFX); // Rotation controls
+            hb.getChildren().addAll(imgV); // Adding the ImageView to HBox
+            images.getChildren().add(hb); // Adding HBox to the group images
         }
     }
 

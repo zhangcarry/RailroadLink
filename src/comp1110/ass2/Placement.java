@@ -25,7 +25,7 @@ public class Placement {
         map.put("RE", "R000");
     }
 
-    //roteate tile
+    //rotate tile
     public String replace(String a){
         String State = map.get(a.substring(0,2));
         StringBuilder replace = new StringBuilder(State);
