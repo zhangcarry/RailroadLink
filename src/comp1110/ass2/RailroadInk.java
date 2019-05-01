@@ -105,6 +105,7 @@ public class RailroadInk {
      *
      * @return true if the placements are connected neighbours
      */
+<<<<<<< HEAD
     //construct a method to replace the similar tiles.
     public static String replace(String a){
         String tile = a.substring(0,2);
@@ -157,99 +158,31 @@ public class RailroadInk {
         }
     } return position;
     }
+=======
+>>>>>>> 6981adec49974e000732a26f410e7553aa305323
     public static boolean areConnectedNeighbours(String tilePlacementStringA, String tilePlacementStringB) {
         // FIXME Task 5: determine whether neighbouring placements are connected
-        boolean isPositionConnected = false;
-        boolean areOriConnected = false;
-
-        //create several String Array to group different types of tiles
-        String[] upHighway =
-                {"S00", "S01", "S03", "S10", "S20", "S40", "S41", "S50", "A30", "A32", "A33", "A40", "A50", "A51", "B00", "B10", "B14", "B20"};
-        String[] downHighway =
-                {"S01", "S02", "S03", "S12", "S20", "S42", "S43", "S50", "A30", "A31", "A32", "A40", "A52", "A53", "B02", "B12", "B16", "B20"};
-        String[] upRailway =
-                {"S02", "S11", "S12", "S13", "S30", "S42", "S43", "S51", "A00", "A01", "A10", "A20", "A22", "A23", "B02", "B13", "B15", "B21"};
-        String[] downRailway =
-                {"S00", "S10", "S11", "S13", "S30", "S40", "S41", "S51", "A02", "A03", "A10", "A20", "A21", "A22", "B00", "B11", "B17", "B21"};
-        String[] rightHighway =
-                {"S00", "S01", "S02", "S11", "S20", "S41", "S42", "S51", "A30", "A31", "A33", "A41", "A51", "A52", "B01", "B11", "B15", "B21"};
-        String[] leftHighway =
-                {"S00", "S02", "S03", "S13", "S20", "S40", "S43", "S51", "A31", "A32", "A33", "A41", "A50", "A53", "B03", "B13", "B17", "B21"};
-        String[] rightRailway =
-                {"S03", "S10", "S12", "S13", "S30", "S40", "S43", "S50", "A01", "A02", "A11", "A20", "A21", "A23", "B03", "B10", "B16", "B20"};
-        String[] leftRailway =
-                {"S01", "S10", "S11", "S12", "S30", "S41", "S42", "S50", "A00", "A03", "A11", "A21", "A22", "A23", "B01", "B12", "B14", "B20"};
-
-        String oriTileA = tilePlacementStringA.substring(0, 2) + tilePlacementStringA.substring(4);
-        String oriTileB = tilePlacementStringB.substring(0, 2) + tilePlacementStringB.substring(4);
-        String oriTileNA = replace(oriTileA);
-        String oriTileNB = replace(oriTileB);
-        String positionA = tilePlacementStringA.substring(2, 4);
-        String positionB = tilePlacementStringB.substring(2, 4);
-        //determine whether two tiles are connected successfully
-        if (!position(positionA, positionB).equals("Not connected")){
-            isPositionConnected = true;
-            if (position(positionA, positionB).equals("A is in the right side of B")) {
-                for (String a: leftHighway) {
-                    for (String b: rightHighway){
-                        if(a.equals(oriTileNA)&&b.equals(oriTileNB)){
-                            areOriConnected = true;
-                        }}}
-                for (String a: leftRailway){
-                    for (String b: rightRailway){
-                        if (a.equals(oriTileNA)&&b.equals(oriTileNB)){
-                            areOriConnected = true;
-                }}}
-            }else if (position(positionA, positionB).equals("A is in the left side of B")){
-                for (String a: leftRailway){
-                    for (String b: rightRailway){
-                        if (a.equals(oriTileNB)&&b.equals(oriTileNA)){
-                            areOriConnected = true;
-                        }
-                    }
-                }
-                for (String a: leftHighway){
-                    for (String b: rightHighway){
-                        if (a.equals(oriTileNB)&&b.equals(oriTileNA)){
-                            areOriConnected = true;
-                        }
-                    }
-                }
-            } else if (position(positionA, positionB).equals("A is in the downside of B")) {
-                for (String a: upHighway){
-                    for (String b: downHighway){
-                        if (a.equals(oriTileNA)&&b.equals(oriTileNB)){
-                            areOriConnected = true;
-                        }
-                    }
-                }
-                for (String a: upRailway){
-                    for (String b: downRailway){
-                        if (a.equals(oriTileNA)&&b.equals(oriTileNB)){
-                            areOriConnected = true;
-                        }
-                    }
-                }
-            } else if (position(positionA, positionB).equals("A is in the upside of B")) {
-                for (String a: upHighway){
-                    for (String b: downHighway){
-                        if (a.equals(oriTileNB)&&b.equals(oriTileNA)){
-                            areOriConnected = true;
-                        }
-                    }
-                }
-                for (String a: upRailway){
-                    for (String b: downRailway){
-                        if (a.equals(oriTileNB)&&b.equals(oriTileNA)){
-                            areOriConnected = true;
-                        }
-                    }
-                }
-        } }
-        return isPositionConnected && areOriConnected;
+        Placement p = new Placement();
+        String A = p.replace(tilePlacementStringA);
+        String B = p.replace(tilePlacementStringB);
+        Board b = new Board();
+        String position = b.neighbored(tilePlacementStringA, tilePlacementStringB);
+        if (!position.equals("Not Connected")) {
+            if (position.equals("A is in the right side of B")) {
+                return A.charAt(3) == B.charAt(1) && A.charAt(3) != '0';
+            }else if (position.equals("A is in the left side of B")){
+                return A.charAt(1) == B.charAt(3) && A.charAt(1) != '0';
+            }else if(position.equals("A is in the downside of B")){
+                return A.charAt(0) == B.charAt(2) && A.charAt(0) != '0';
+            }else if (position.equals("A is in the upside of B")){
+                return A.charAt(2) == B.charAt(0) && A.charAt(2) != '0';
+            }else{
+                return false;
+            }
+        }else{
+            return false;}
     }
 
-        //return false;
 
     /**
      * Given a well-formed board string representing an ordered list of placements,
@@ -287,7 +220,7 @@ public class RailroadInk {
               }
             }
             if (!flage){
-              return false;
+                return false;
             }
           }
         }

@@ -1,7 +1,6 @@
 package comp1110.ass2.gui;
 
 import javafx.application.Application;
-import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -41,86 +40,88 @@ public class Viewer extends Application {
     void makePlacement(String placement) {
         // FIXME Task 4: implement the simple placement viewer
         images.getChildren().clear();
-        String piece = placement.substring(0,2);
-        char ori = placement.charAt(4);
-        char layOutY = placement.charAt(2);
-        char layOutX = placement.charAt(3);
-        int oriFX = 0;
-        int rotateFX = 1;
-        int layOutXFX = 0;
-        int layOutYFX = 0;
-        String PIECE_LOCATION = "comp1110/ass2/gui/assets/" + piece + ".png";
-        Image img = new Image(PIECE_LOCATION);
-        HBox hb = new HBox();
-        ImageView imgV = new ImageView(img);
-        imgV.setFitHeight(100);
-        imgV.setFitWidth(100);
-        if (layOutX == '2') {
-            layOutXFX = 100;
+        for (int i = 0; i < placement.length(); i = i + 5) {
+            String piece = placement.substring(i,i + 2);
+            char ori = placement.charAt(i + 4);
+            char layOutY = placement.charAt(i + 2);
+            char layOutX = placement.charAt(i + 3);
+            int oriFX = 0;
+            int rotateFX = 1;
+            int layOutXFX = 0;
+            int layOutYFX = 0;
+            String PIECE_LOCATION = "comp1110/ass2/gui/assets/" + piece + ".png";
+            Image img = new Image(PIECE_LOCATION);
+            HBox hb = new HBox();
+            ImageView imgV = new ImageView(img);
+            imgV.setFitHeight(100);
+            imgV.setFitWidth(100);
+            if (layOutX == '2') {
+                layOutXFX = 100;
+            }
+            if (layOutX == '3') {
+                layOutXFX = 200;
+            }
+            if (layOutX == '4') {
+                layOutXFX = 300;
+            }
+            if (layOutX == '5') {
+                layOutXFX = 400;
+            }
+            if (layOutX == '6') {
+                layOutXFX = 500;
+            }
+            if (layOutX == '7') {
+                layOutXFX = 600;
+            }
+            if (layOutY == 'B') {
+                layOutYFX = 100;
+            }
+            if (layOutY == 'C') {
+                layOutYFX = 200;
+            }
+            if (layOutY == 'D') {
+                layOutYFX = 300;
+            }
+            if (layOutY == 'E') {
+                layOutYFX = 400;
+            }
+            if (layOutY == 'F') {
+                layOutYFX = 500;
+            }
+            if (layOutY == 'G') {
+                layOutYFX = 600;
+            }
+            if (ori == '1') {
+                oriFX = 90;
+            }
+            if (ori == '2') {
+                oriFX = 180;
+            }
+            if (ori == '3') {
+                oriFX = 270;
+            }
+            if (ori == '4') {
+                rotateFX = -1;
+            }
+            if (ori == '5') {
+                rotateFX = -1;
+                oriFX = 90;
+            }
+            if (ori == '6') {
+                rotateFX = -1;
+                oriFX = 180;
+            }
+            if (ori == '7') {
+                rotateFX = -1;
+                oriFX = 270;
+            }
+            hb.setLayoutX(layOutXFX);
+            hb.setLayoutY(layOutYFX);
+            imgV.setScaleX(rotateFX);
+            imgV.setRotate(oriFX);
+            hb.getChildren().addAll(imgV);
+            images.getChildren().add(hb);
         }
-        if (layOutX == '3') {
-            layOutXFX = 200;
-        }
-        if (layOutX == '4') {
-            layOutXFX = 300;
-        }
-        if (layOutX == '5') {
-            layOutXFX = 400;
-        }
-        if (layOutX == '6') {
-            layOutXFX = 500;
-        }
-        if (layOutX == '7') {
-            layOutXFX = 600;
-        }
-        if (layOutY == 'B') {
-            layOutYFX = 100;
-        }
-        if (layOutY == 'C') {
-            layOutYFX = 200;
-        }
-        if (layOutY == 'D') {
-            layOutYFX = 300;
-        }
-        if (layOutY == 'E') {
-            layOutYFX = 400;
-        }
-        if (layOutY == 'F') {
-            layOutYFX = 500;
-        }
-        if (layOutY == 'G') {
-            layOutYFX = 600;
-        }
-        if (ori == '1') {
-            oriFX = 90;
-        }
-        if (ori == '2') {
-            oriFX = 180;
-        }
-        if (ori == '3') {
-            oriFX = 270;
-        }
-        if (ori == '4') {
-            rotateFX = -1;
-        }
-        if (ori == '5') {
-            rotateFX = -1;
-            oriFX = 90;
-        }
-        if (ori == '6') {
-            rotateFX = -1;
-            oriFX = 180;
-        }
-        if (ori == '7') {
-            rotateFX = -1;
-            oriFX = 270;
-        }
-        hb.setLayoutX(layOutXFX);
-        hb.setLayoutY(layOutYFX);
-        imgV.setScaleX(rotateFX);
-        imgV.setRotate(oriFX);
-        hb.getChildren().addAll(imgV);
-        images.getChildren().add(hb);
     }
 
     /**
