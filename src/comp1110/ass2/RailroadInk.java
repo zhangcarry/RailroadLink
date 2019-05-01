@@ -105,62 +105,7 @@ public class RailroadInk {
      *
      * @return true if the placements are connected neighbours
      */
-<<<<<<< HEAD
-    //construct a method to replace the similar tiles.
-    public static String replace(String a){
-        String tile = a.substring(0,2);
-        String ori = a.substring(2);
-        StringBuilder replace = new StringBuilder(a);
-        if (tile.equals("S0")||tile.equals("S1")||tile.equals("B0")){
-            if (ori.equals("7")){replace.setCharAt(2, '3');}
-            if (ori.equals("6")){replace.setCharAt(2, '2');}
-            if (ori.equals("5")){replace.setCharAt(2,'1');}
-            if (ori.equals("4")){replace.setCharAt(2,'0');}
-        }else if (tile.equals("S2")||tile.equals("S3")){
-            replace.setCharAt(2,'0');
-        }else if(tile.equals("S4")||tile.equals("A0")||tile.equals("A5")){
-            if (ori.equals("7")){replace.setCharAt(2,'0');}
-            if (ori.equals("6")){replace.setCharAt(2,'3');}
-            if (ori.equals("5")){replace.setCharAt(2,'2');}
-            if (ori.equals("4")){replace.setCharAt(2,'1');}
-        }else if(tile.equals("S5")||tile.equals("A1")||tile.equals("A4")||tile.equals("B2")){
-            if (ori.equals("2")){replace.setCharAt(2,'0');}
-            if (ori.equals("3")){replace.setCharAt(2,'1');}
-            if (ori.equals("4")){replace.setCharAt(2,'0');}
-            if (ori.equals("5")){replace.setCharAt(2,'1');}
-            if (ori.equals("6")){replace.setCharAt(2,'0');}
-            if (ori.equals("7")){replace.setCharAt(2,'1');}
-        }else if(tile.equals("A2")||tile.equals("A3")){
-            if (ori.equals("7")){replace.setCharAt(2,'1');}
-            if (ori.equals("6")){replace.setCharAt(2,'0');}
-            if (ori.equals("5")){replace.setCharAt(2,'3');}
-            if (ori.equals("4")){replace.setCharAt(2,'2');}
-        }
-        return replace.toString();
-    }
-    //construct a method to determine the position of A and B
-    public static String position(String a, String b){
-        String position = "Not connected";
-        if (a.charAt(0) >= 'A'-1 && b.charAt(0) >= 'A'-1 && a.charAt(0) <= 'G'+1 && b.charAt(0) <= 'G'+1 &&
-                a.charAt(1) >= '0'-1 && b.charAt(1) >= '0'-1 && a.charAt(1) <= '6'+1 && b.charAt(1) <= '6'+1){
-            if (a.charAt(0)==b.charAt(0)){
-                if (a.charAt(1) == b.charAt(1) + 1){
-                    position = "A is in the right side of B";
-                }else if (a.charAt(1) == b.charAt(1) - 1){
-                    position = "A is in the left side of B";
-                }
-            }else if (a.charAt(1) == b.charAt(1)){
-                if (a.charAt(0) == b.charAt(0) + 1){
-                    position = "A is in the downside of B";
-                }else if(a.charAt(0) == b.charAt(0) - 1){
-                    position = "A is in the upside of B";
-                }
-        }
-    } return position;
-    }
-=======
->>>>>>> 6981adec49974e000732a26f410e7553aa305323
-    public static boolean areConnectedNeighbours(String tilePlacementStringA, String tilePlacementStringB) {
+public static boolean areConnectedNeighbours(String tilePlacementStringA, String tilePlacementStringB) {
         // FIXME Task 5: determine whether neighbouring placements are connected
         Placement p = new Placement();
         String A = p.replace(tilePlacementStringA);
