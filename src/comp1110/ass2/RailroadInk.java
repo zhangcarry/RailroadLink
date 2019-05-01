@@ -9,7 +9,7 @@ public class RailroadInk {
         Character [] faceB = {'0', '1', '2'};
         Character [] faceAS = {'0', '1', '2', '3', '4', '5'};
         if (tilePlacementString.charAt(0) == 'B'){
-            return (Arrays.asList(faceB).contains(tilePlacementString.charAt(1)));
+            return (Arrays.asList(faceB).contains(tilePlacementString.charAt(1))); // Specifying different cases for different dies
         }
         else {
             return (Arrays.asList(faceAS).contains(tilePlacementString.charAt(1)));
@@ -34,8 +34,8 @@ public class RailroadInk {
         Character [] col = {'0', '1', '2', '3', '4', '5', '6'};
         Character [] ori = {'0', '1', '2', '3', '4', '5', '6', '7'};
         boolean isLengthValid = tilePlacementString.length() == 5;
-        if (isLengthValid) {
-            boolean isDieValid = Arrays.asList(die).contains(tilePlacementString.charAt(0));
+        if (isLengthValid) { // Defining booleans for the requirements
+            boolean isDieValid = Arrays.asList(die).contains(tilePlacementString.charAt(0)); // See if the element matches the ones in array using ArrayList
             boolean isRowValid = Arrays.asList(row).contains(tilePlacementString.charAt(2));
             boolean isColValid = Arrays.asList(col).contains(tilePlacementString.charAt(3));
             boolean isOriValid = Arrays.asList(ori).contains(tilePlacementString.charAt(4));
