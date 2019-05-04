@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 public class Placement {
     //name each tile
-    private HashMap<String, String> map = new HashMap<>();
+    public HashMap<String, String> map = new HashMap<>();
     Placement() {
         map.put("S0", "HHRH");
         map.put("S1", "HRRR");
@@ -35,40 +35,40 @@ public class Placement {
         char indexLeft = State.charAt(3);
         switch (a.charAt(4)){
             case '1':
-                replace.setCharAt(0, indexLeft);
-                replace.setCharAt(1, indexUp);
-                replace.setCharAt(2, indexRight);
-                replace.setCharAt(3, indexDown);
+                replace.setCharAt(0, indexLeft);//0-3
+                replace.setCharAt(1, indexUp);//1-0
+                replace.setCharAt(2, indexRight);//2-1
+                replace.setCharAt(3, indexDown);//3-2
                 break;
             case '2':
-                replace.setCharAt(0, indexDown);
-                replace.setCharAt(1, indexLeft);
-                replace.setCharAt(2, indexUp);
-                replace.setCharAt(3, indexRight);
+                replace.setCharAt(0, indexDown); //0-2
+                replace.setCharAt(1, indexLeft);//1-3
+                replace.setCharAt(2, indexUp);//2-0
+                replace.setCharAt(3, indexRight);//3-1
                 break;
             case '3':
-                replace.setCharAt(0, indexRight);
-                replace.setCharAt(1, indexDown);
-                replace.setCharAt(2, indexLeft);
-                replace.setCharAt(3, indexUp);
+                replace.setCharAt(0, indexRight);//0-1
+                replace.setCharAt(1, indexDown);//1-2
+                replace.setCharAt(2, indexLeft);//2-3
+                replace.setCharAt(3, indexUp);//3-0
                 break;
             case '4':
                 replace.setCharAt(1, indexLeft);
                 replace.setCharAt(3, indexRight);
                 break;
             case '5':
-                replace.setCharAt(0, indexRight);
-                replace.setCharAt(1, indexUp);
-                replace.setCharAt(2, indexLeft);
-                replace.setCharAt(3, indexDown);
+                replace.setCharAt(0, indexRight); // 0-1
+                replace.setCharAt(1, indexUp); //1-0
+                replace.setCharAt(2, indexLeft);//2-3
+                replace.setCharAt(3, indexDown);//3-2
                 break;
             case '6':
-                replace.setCharAt(0, indexDown);
+                replace.setCharAt(0, indexDown); // 0-2
                 replace.setCharAt(2, indexUp);
                 break;
             case '7':
-                replace.setCharAt(0, indexLeft);
-                replace.setCharAt(1, indexDown);
+                replace.setCharAt(0, indexLeft); //0 - 3
+                replace.setCharAt(1, indexDown); //1-2
                 replace.setCharAt(2, indexRight);
                 replace.setCharAt(3, indexUp);
                 break;
