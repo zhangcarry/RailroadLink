@@ -236,42 +236,8 @@ public static boolean areConnectedNeighbours(String tilePlacementStringA, String
      */
     public static int getBasicScore(String boardString) {
         // FIXME Task 8: compute the basic score
-        List<String> list = new ArrayList<>();
-        List<String> exists = new ArrayList<>();
-        for (int i = 0; i+5<=boardString.length();i+=5){
-            list.add(boardString.substring(i, i+5));
-        }
-        for (int i = 0; i< list.size(); i++){
-            if (list.get(i).substring(0, 2).equals("A1") ||list.get(i).substring(0, 2).equals("A3")||list.get(i).substring(0, 2).equals("A5")
-            ||list.get(i).substring(0, 2).equals("B0") || list.get(i).substring(0, 2).equals("D0") || list.get(i).substring(0, 2).equals("F0")
-            ||list.get(i).substring(0, 2).equals("G1") || list.get(i).substring(0, 2).equals("G3") || list.get(i).substring(0, 2).equals("G5")
-            ||list.get(i).substring(0, 2).equals("F6")||list.get(i).substring(0, 2).equals("D6")||list.get(i).substring(0, 2).equals("B6")){
-                exists.add(list.get(i));
-            }
-        }
+
         return 0;
-    }
-    private static List<List<String>> getRoads(List<String> list, List<String> exists){
-        List<String> b2 = new ArrayList<>();
-        List<String> usedExists = new ArrayList<>();
-        List<List<String>> results = new ArrayList<>();
-        for (int i = 0; i< list.size()-1; i++){
-            if (list.get(i).substring(0, 2).equals("B2")){
-                b2.add(list.get(i));
-            }
-        }
-        for(int j = 0; j<list.size(); j++){
-            if (!usedExists.contains(exists.get(j))){
-                usedExists.add(exists.get(j));
-                List<String> map = new ArrayList<>(list);
-                while(!map.isEmpty()){
-                    for (int i = 0; i<map.size(); i++){
-                        
-                    }
-                }
-            }
-        }
-        return results;
     }
 
 
