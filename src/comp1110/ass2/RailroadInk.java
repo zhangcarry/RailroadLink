@@ -246,6 +246,16 @@ public static boolean areConnectedNeighbours(String tilePlacementStringA, String
                 centreTiles++;
             }
         }
+
+        int score = centreTiles + getExitScore(boardString) - getDeadEndScore(boardString);
+        return score;
+    }
+
+    /**
+     * @param boardString a board string representing a completed game
+     * @return integer (positive) for exit score
+     */
+    public static int getExitScore(String boardString) {
         int exits = 0;
         int exit = 0;
         String [] exitHwyTop = {"A2", "A6"};
@@ -307,13 +317,27 @@ public static boolean areConnectedNeighbours(String tilePlacementStringA, String
         if (exits == 12) {
             exit++;
         }
-        int deadEnds = 0;
-
-        int score = centreTiles + exit;
-        return score;
+        return exit;
     }
 
-
+    public static int getDeadEndScore(String boardString) {
+        int deadEnds = 0;
+        Placement p = new Placement();
+        boolean onEdge = false;
+        for (int i = 0; i<boardString.length(); i=i+5) {
+            String plm = boardString.substring(i, i + 5);
+            boolean onLftEdge = plm.charAt(3) == '1';
+            boolean onRgtEdge = plm.charAt(3) == '7';
+            boolean onTopEdge = plm.charAt(2) == 'A';
+            boolean onBtmEdge = plm.charAt(2) == 'G';
+            boolean isA1 = plm.substring(2, 4).equals("A1");
+            boolean isA7 = plm.substring(2, 4).equals("A7");
+            boolean isG1 = plm.substring(2, 4).equals("G1");
+            boolean isG7 = plm.substring(2, 4).equals("G7");
+            String plmE = p.replace(plm);
+        }
+        return deadEnds;
+    }
     /**
      * Given a valid boardString and a dice roll for the round,
      * return a String representing an ordered sequence of valid piece placements for the round.
