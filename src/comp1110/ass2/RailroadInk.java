@@ -236,6 +236,11 @@ public static boolean areConnectedNeighbours(String tilePlacementStringA, String
      */
     public static int getBasicScore(String boardString) {
         // FIXME Task 8: compute the basic score
+        int score = getCentreScore(boardString) + getExitScore(boardString) - getDeadEndScore(boardString);
+        return score;
+    }
+
+    public static int getCentreScore(String boardString) {
         Character [] centrecol = {'3', '4', '5'};
         Character [] centrerow = {'C', 'D', 'E'};
         int centreTiles = 0;
@@ -246,11 +251,8 @@ public static boolean areConnectedNeighbours(String tilePlacementStringA, String
                 centreTiles++;
             }
         }
-
-        int score = centreTiles + getExitScore(boardString) - getDeadEndScore(boardString);
-        return score;
+        return centreTiles;
     }
-
     /**
      * @param boardString a board string representing a completed game
      * @return integer (positive) for exit score

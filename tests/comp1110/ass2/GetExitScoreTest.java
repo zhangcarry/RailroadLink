@@ -31,5 +31,10 @@ public class GetExitScoreTest {
         assertTrue("Expected exit score of 4, but method returned " + num, num == 4);
     }
 
+    @Test
+    public void testLongString() {
+        int num = RailroadInk.getExitScore("A4A50A1F61A0B61S5F50B1F46A1F01");
+        assertTrue("Expected exit score of 0, but method returned " + num, num == 0);
+    }
 
 }
