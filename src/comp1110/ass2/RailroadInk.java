@@ -259,14 +259,14 @@ public static boolean areConnectedNeighbours(String tilePlacementStringA, String
         Placement p = new Placement();
         for (int i = 0; i<boardString.length(); i=i+5) {
             String plm = boardString.substring(i,i+5);
-            boolean isTopHwyExit = Arrays.asList(exitHwyTop).contains(plm.substring(2,3));
-            boolean isBtmHwyExit = Arrays.asList(exitHwyBtm).contains(plm.substring(2,3));
-            boolean isLftHwyExit = Arrays.asList(exitHwyLft).contains(plm.substring(2,3));
-            boolean isRgtHwyExit = Arrays.asList(exitHwyRgt).contains(plm.substring(2,3));
-            boolean isTopRilExit = Arrays.asList(exitRilTop).contains(plm.substring(2,3));
-            boolean isBtmRilExit = Arrays.asList(exitRilBtm).contains(plm.substring(2,3));
-            boolean isLftRilExit = Arrays.asList(exitRilLft).contains(plm.substring(2,3));
-            boolean isRgtRilExit = Arrays.asList(exitRilRgt).contains(plm.substring(2,3));
+            boolean isTopHwyExit = Arrays.asList(exitHwyTop).contains(plm.substring(2,4));
+            boolean isBtmHwyExit = Arrays.asList(exitHwyBtm).contains(plm.substring(2,4));
+            boolean isLftHwyExit = Arrays.asList(exitHwyLft).contains(plm.substring(2,4));
+            boolean isRgtHwyExit = Arrays.asList(exitHwyRgt).contains(plm.substring(2,4));
+            boolean isTopRilExit = Arrays.asList(exitRilTop).contains(plm.substring(2,4));
+            boolean isBtmRilExit = Arrays.asList(exitRilBtm).contains(plm.substring(2,4));
+            boolean isLftRilExit = Arrays.asList(exitRilLft).contains(plm.substring(2,4));
+            boolean isRgtRilExit = Arrays.asList(exitRilRgt).contains(plm.substring(2,4));
             String plmE = p.replace(plm);
             boolean isValidTopHwyExit = plmE.charAt(0) == 'H';
             boolean isValidBtmHwyExit = plmE.charAt(2) == 'H';
