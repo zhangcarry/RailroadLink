@@ -234,11 +234,112 @@ public static boolean areConnectedNeighbours(String tilePlacementStringA, String
      * @param boardString a board string representing a completed game
      * @return integer (positive or negative) for score *not* considering longest rail/highway
      */
-    public static int getBasicScore(String boardString) {
-        // FIXME Task 8: compute the basic score
-
-        return 0;
+    public static int getBasicScore (String boardString){
+            // FIXME Task 8: compute the basic score
+            int score = getCentreScore(boardString) + getExitScore(boardString) - getDeadEndScore(boardString);
+            return score;
+        }
+    public static int getCentreScore (String boardString) {
+        Character[] centrecol = {'3', '4', '5'};
+        Character[] centrerow = {'C', 'D', 'E'};
+        int centreTiles = 0;
+        for (int i = 0; i < boardString.length(); i = i + 5) {
+            boolean isRowValid = Arrays.asList(centrerow).contains(boardString.charAt(i + 2));
+            boolean isColValid = Arrays.asList(centrecol).contains(boardString.charAt(i + 3));
+            if (isRowValid && isColValid) {
+                centreTiles++;
+            }
+        }
+        return centreTiles;
     }
+    /**
+     * @param boardString a board string representing a completed game
+     * @return integer (positive) for exit score
+     */
+    public static int getExitScore(String boardString) {
+        int exits = 0;
+        int exit = 0;
+        String [] exitHwyTop = {"A2", "A6"};
+        String [] exitHwyBtm = {"G2", "G6"};
+        String [] exitHwyLft = {"D1"};
+        String [] exitHwyRgt = {"D7"};
+        String [] exitRilTop = {"A4"};
+        String [] exitRilBtm = {"G4"};
+        String [] exitRilLft = {"B1", "F1"};
+        String [] exitRilRgt = {"B7", "F7"};
+        Placement p = new Placement();
+        for (int i = 0; i<boardString.length(); i=i+5) {
+            String plm = boardString.substring(i,i+5);
+            boolean isTopHwyExit = Arrays.asList(exitHwyTop).contains(plm.substring(2,4));
+            boolean isBtmHwyExit = Arrays.asList(exitHwyBtm).contains(plm.substring(2,4));
+            boolean isLftHwyExit = Arrays.asList(exitHwyLft).contains(plm.substring(2,4));
+            boolean isRgtHwyExit = Arrays.asList(exitHwyRgt).contains(plm.substring(2,4));
+            boolean isTopRilExit = Arrays.asList(exitRilTop).contains(plm.substring(2,4));
+            boolean isBtmRilExit = Arrays.asList(exitRilBtm).contains(plm.substring(2,4));
+            boolean isLftRilExit = Arrays.asList(exitRilLft).contains(plm.substring(2,4));
+            boolean isRgtRilExit = Arrays.asList(exitRilRgt).contains(plm.substring(2,4));
+            String plmE = p.replace(plm);
+            boolean isValidTopHwyExit = plmE.charAt(0) == 'H';
+            boolean isValidBtmHwyExit = plmE.charAt(2) == 'H';
+            boolean isValidLftHwyExit = plmE.charAt(3) == 'H';
+            boolean isValidRgtHwyExit = plmE.charAt(1) == 'H';
+            boolean isValidTopRilExit = plmE.charAt(0) == 'R';
+            boolean isValidBtmRilExit = plmE.charAt(2) == 'R';
+            boolean isValidLftRilExit = plmE.charAt(3) == 'R';
+            boolean isValidRgtRilExit = plmE.charAt(1) == 'R';
+            if (isTopHwyExit && isValidTopHwyExit) {
+                exits++;
+            }
+            if (isBtmHwyExit && isValidBtmHwyExit) {
+                exits++;
+            }
+            if (isLftHwyExit && isValidLftHwyExit) {
+                exits++;
+            }
+            if (isRgtHwyExit && isValidRgtHwyExit) {
+                exits++;
+            }
+            if (isTopRilExit && isValidTopRilExit) {
+                exits++;
+            }
+            if (isBtmRilExit && isValidBtmRilExit) {
+                exits++;
+            }
+            if (isLftRilExit && isValidLftRilExit) {
+                exits++;
+            }
+            if (isRgtRilExit && isValidRgtRilExit) {
+                exits++;
+            }
+        }
+        for (int i = 1;i<exits;i++) {
+            exit = exit + 4;
+        }
+        if (exits == 12) {
+            exit++;
+        }
+        return exit;
+    }
+
+    public static int getDeadEndScore(String boardString) {
+        int deadEnds = 0;
+        Placement p = new Placement();
+        boolean onEdge = false;
+        for (int i = 0; i<boardString.length(); i=i+5) {
+            String plm = boardString.substring(i, i + 5);
+            boolean onLftEdge = plm.charAt(3) == '1';
+            boolean onRgtEdge = plm.charAt(3) == '7';
+            boolean onTopEdge = plm.charAt(2) == 'A';
+            boolean onBtmEdge = plm.charAt(2) == 'G';
+            boolean isA1 = plm.substring(2, 4).equals("A1");
+            boolean isA7 = plm.substring(2, 4).equals("A7");
+            boolean isG1 = plm.substring(2, 4).equals("G1");
+            boolean isG7 = plm.substring(2, 4).equals("G7");
+            String plmE = p.replace(plm);
+        }
+        return deadEnds;
+    }
+
 
 
     /**
