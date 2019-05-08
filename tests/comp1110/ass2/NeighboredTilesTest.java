@@ -13,14 +13,14 @@ public class NeighboredTilesTest {
 
     @Test
     public void testValidLine(){
-        for (String[] vL: validLineR){
-            String i = Board.neighbored(vL[0], vL[1]);
-            assertTrue("Board.Neighbored(" + vL[0] + ", " + vL[1] + ") expected " + "A is in the right side of B" + " but returned " + i,
-                    i.equals("A is in the right side of B"));
-        }
         for (String[] vR: validLineR){
             String i = Board.neighbored(vR[0], vR[1]);
-            assertTrue("Board.Neighbored(" + vR[0] + ", " + vR[1] + ") expected " + "A is in the left side of B" + " but returned " + i,
+            assertTrue("Board.Neighbored(" + vR[0] + ", " + vR[1] + ") expected " + "A is in the right side of B" + " but returned " + i,
+                    i.equals("A is in the right side of B"));
+        }
+        for (String[] vL: validLineL){
+            String i = Board.neighbored(vL[0], vL[1]);
+            assertTrue("Board.Neighbored(" + vL[0] + ", " + vL[1] + ") expected " + "A is in the left side of B" + " but returned " + i,
                     i.equals("A is in the left side of B"));
         }
     }
@@ -32,7 +32,7 @@ public class NeighboredTilesTest {
             assertTrue("Board.Neighbored(" + vD[0] + ", " + vD[1] + ") expected " + "A is in the downside of B" + " but returned " + i,
                     i.equals("A is in the downside of B"));
         }
-        for (String[] vU: validLineR){
+        for (String[] vU: validRowU){
             String i = Board.neighbored(vU[0], vU[1]);
             assertTrue("Board.Neighbored(" + vU[0] + ", " + vU[1] + ") expected " + "A is in the upside of B" + " but returned " + i,
                     i.equals("A is in the upside of B"));
@@ -74,11 +74,10 @@ public class NeighboredTilesTest {
             {"S5F46", "A4E42"}
     };
     private final String[][] invalid = {
-            {"A4A50", "A1B50"},
-            {"B2G50", "A1F50"},
-            {"A3C10", "A0C20"},
-            {"A2G40", "S2F40"},
-            {"A3C21", "S5C34"}
+            {"A4A10", "A3B20"},
+            {"A4A00", "A3B13"},
+            {"A3C13", "A4B21"},
+            {"A3B13", "B0A01"}
     };
 }
 
