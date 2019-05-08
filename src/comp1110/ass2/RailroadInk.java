@@ -250,14 +250,12 @@ public static boolean areConnectedNeighbours(String tilePlacementStringA, String
                 centreScore++;
             }
         }
-
         //find B2 (not connect to exists) and change it into A1 and A4
         for(int i = 0; i<tiles.size(); i++){
-            String BA1;
-            String BA4;
             if (!connectExists(tiles.get(i))){
+                String BA1;
+                String BA4;
                 int count =0;
-                //判断这个b2是有效的
                 if (tiles.get(i).substring(0,2).equals("B2")){
                     String b2 = tiles.get(i);
                     for (String a: tiles){
@@ -266,7 +264,6 @@ public static boolean areConnectedNeighbours(String tilePlacementStringA, String
                         }
                     }
                     if (count == 4){
-                        //BA1 = "A1".concat(b2.substring(2));
                         BA4 = "A4".concat(b2.substring(2));
                         if (b2.charAt(4) % 2 == 0){
                             BA1 = "A1".concat(b2.substring(2, 4)).concat("1");
@@ -280,17 +277,15 @@ public static boolean areConnectedNeighbours(String tilePlacementStringA, String
                 }
             }
         }
-        System.out.println("tiles: " + tiles);
-
-        //compute routes:
+        //compute routes
         ArrayList<String> usedExists = new ArrayList<>();
         for (int i =0; i<tiles.size(); i++){
             String e = tiles.get(i);
             if (connectExists(e) && !usedExists.contains(e)){
-                List<String> tile = new LinkedList<>(); //一条线路
+                List<String> tile = new LinkedList<>();
                 List<String> result = new LinkedList<>();
                 usedExists.add(e);
-                tile.add(e);//此时线路为空，加上了exist
+                tile.add(e);
                 List<String> tiles1 = new ArrayList<>(tiles);
                 while(!tile.isEmpty()){
                     String t = tile.remove(0);
@@ -311,8 +306,6 @@ public static boolean areConnectedNeighbours(String tilePlacementStringA, String
                 route.add(result);
             }
         }
-
-
         //compute exists score
         int endScore = 0;
         int countEnds = 0;
@@ -320,6 +313,17 @@ public static boolean areConnectedNeighbours(String tilePlacementStringA, String
             for (String t: route.get(i)){
                 if (connectExists(t)){
                     countEnds ++;
+                }
+                int count = 0;
+                if (t.substring(0,2).equals("B2")){
+                    for (String a: tiles){
+                        if (areConnectedNeighbours(t, a)){
+                            count++;
+                        }
+                    }
+                    if (count == 3){
+                        countEnds --;
+                    }
                 }
             }
             if (countEnds == 12){
@@ -329,7 +333,6 @@ public static boolean areConnectedNeighbours(String tilePlacementStringA, String
             }
             countEnds = 0;
         }
-
         //compute dead ends
         int badScore = 0;
         for (String t: tiles){
@@ -344,7 +347,6 @@ public static boolean areConnectedNeighbours(String tilePlacementStringA, String
                     }
                     if (count!=4){
                         count = deadEnds(t, pL, pR, count);
-                        System.out.println(t + " 4 " + count);
                         badScore += count - 4;
                     }
                 }
@@ -357,7 +359,6 @@ public static boolean areConnectedNeighbours(String tilePlacementStringA, String
                     }
                     if (count != 3){
                         count = deadEnds(t, pL, pR, count);
-                        System.out.println(t + " 3 " + count);
                         badScore += count -3;
                     }
                 }
@@ -371,34 +372,33 @@ public static boolean areConnectedNeighbours(String tilePlacementStringA, String
                         }
                         if (count != 2){
                             count = deadEnds(t, pL, pR, count);
-                            System.out.println(t + " 2 " + count);
                             badScore += count -2;
                         }
                     }
             }
         }
-        System.out.println("badScore: " + badScore);
-        System.out.println("endScore: " + endScore);
-        System.out.println("centreScore " + centreScore);
         return centreScore + endScore + badScore;
     }
-    //compute the tiles in the edge of the board
-    public static int deadEnds (String t, char pL, char pR, int count){
+    //compute the deadEnds in the edges of the board
+    private static int deadEnds (String t, char pL, char pR, int count){
         Placement p = new Placement();
         if (pL == '0' || pL == '6' || pR == 'A' || pR == 'G'){
             if (pL == '0'){
                 if (p.replace(t).charAt(3) != '0'){
                     count++;
                 }
-            }else if (pL == '6'){
+            }
+            if (pL == '6'){
                 if (p.replace(t).charAt(1) != '0'){
                     count++;
                 }
-            }else if (pR == 'A'){
+            }
+            if (pR == 'A'){
                 if (p.replace(t).charAt(0) != '0'){
                     count++;
                 }
-            }else{
+            }
+            if (pR == 'G'){
                 if (p.replace(t).charAt(2) != '0'){
                     count++;
                 }
@@ -407,7 +407,7 @@ public static boolean areConnectedNeighbours(String tilePlacementStringA, String
         return count;
     }
     //find the tiles connecting to the exists
-    public static boolean connectExists(String tile){
+    private static boolean connectExists(String tile){
         String[] exists = {"A1", "A3", "A5", "B0", "D0", "F0", "G1", "G3", "G5", "B6", "D6", "F6"};
         for (int i = 0; i<exists.length; i++){
             if (tile.substring(2,4).equals(exists[i])){
@@ -416,112 +416,6 @@ public static boolean areConnectedNeighbours(String tilePlacementStringA, String
         }
         return false;
     }
-
-
-//            int score = getCentreScore(boardString) + getExitScore(boardString) - getDeadEndScore(boardString);
-//            return score;
-//        }
-//    public static int getCentreScore (String boardString) {
-//        Character[] centrecol = {'3', '4', '5'};
-//        Character[] centrerow = {'C', 'D', 'E'};
-//        int centreTiles = 0;
-//        for (int i = 0; i < boardString.length(); i = i + 5) {
-//            boolean isRowValid = Arrays.asList(centrerow).contains(boardString.charAt(i + 2));
-//            boolean isColValid = Arrays.asList(centrecol).contains(boardString.charAt(i + 3));
-//            if (isRowValid && isColValid) {
-//                centreTiles++;
-//            }
-//        }
-//        return centreTiles;
-//    }
-//    /**
-//     * @param boardString a board string representing a completed game
-//     * @return integer (positive) for exit score
-//     */
-//    public static int getExitScore(String boardString) {
-//        int exits = 0;
-//        int exit = 0;
-//        String [] exitHwyTop = {"A2", "A6"};
-//        String [] exitHwyBtm = {"G2", "G6"};
-//        String [] exitHwyLft = {"D1"};
-//        String [] exitHwyRgt = {"D7"};
-//        String [] exitRilTop = {"A4"};
-//        String [] exitRilBtm = {"G4"};
-//        String [] exitRilLft = {"B1", "F1"};
-//        String [] exitRilRgt = {"B7", "F7"};
-//        Placement p = new Placement();
-//        for (int i = 0; i<boardString.length(); i=i+5) {
-//            String plm = boardString.substring(i,i+5);
-//            boolean isTopHwyExit = Arrays.asList(exitHwyTop).contains(plm.substring(2,4));
-//            boolean isBtmHwyExit = Arrays.asList(exitHwyBtm).contains(plm.substring(2,4));
-//            boolean isLftHwyExit = Arrays.asList(exitHwyLft).contains(plm.substring(2,4));
-//            boolean isRgtHwyExit = Arrays.asList(exitHwyRgt).contains(plm.substring(2,4));
-//            boolean isTopRilExit = Arrays.asList(exitRilTop).contains(plm.substring(2,4));
-//            boolean isBtmRilExit = Arrays.asList(exitRilBtm).contains(plm.substring(2,4));
-//            boolean isLftRilExit = Arrays.asList(exitRilLft).contains(plm.substring(2,4));
-//            boolean isRgtRilExit = Arrays.asList(exitRilRgt).contains(plm.substring(2,4));
-//            String plmE = p.replace(plm);
-//            boolean isValidTopHwyExit = plmE.charAt(0) == 'H';
-//            boolean isValidBtmHwyExit = plmE.charAt(2) == 'H';
-//            boolean isValidLftHwyExit = plmE.charAt(3) == 'H';
-//            boolean isValidRgtHwyExit = plmE.charAt(1) == 'H';
-//            boolean isValidTopRilExit = plmE.charAt(0) == 'R';
-//            boolean isValidBtmRilExit = plmE.charAt(2) == 'R';
-//            boolean isValidLftRilExit = plmE.charAt(3) == 'R';
-//            boolean isValidRgtRilExit = plmE.charAt(1) == 'R';
-//            if (isTopHwyExit && isValidTopHwyExit) {
-//                exits++;
-//            }
-//            if (isBtmHwyExit && isValidBtmHwyExit) {
-//                exits++;
-//            }
-//            if (isLftHwyExit && isValidLftHwyExit) {
-//                exits++;
-//            }
-//            if (isRgtHwyExit && isValidRgtHwyExit) {
-//                exits++;
-//            }
-//            if (isTopRilExit && isValidTopRilExit) {
-//                exits++;
-//            }
-//            if (isBtmRilExit && isValidBtmRilExit) {
-//                exits++;
-//            }
-//            if (isLftRilExit && isValidLftRilExit) {
-//                exits++;
-//            }
-//            if (isRgtRilExit && isValidRgtRilExit) {
-//                exits++;
-//            }
-//        }
-//        for (int i = 1;i<exits;i++) {
-//            exit = exit + 4;
-//        }
-//        if (exits == 12) {
-//            exit++;
-//        }
-//        return exit;
-//    }
-//
-//    public static int getDeadEndScore(String boardString) {
-//        int deadEnds = 0;
-//        Placement p = new Placement();
-//        boolean onEdge = false;
-//        for (int i = 0; i<boardString.length(); i=i+5) {
-//            String plm = boardString.substring(i, i + 5);
-//            boolean onLftEdge = plm.charAt(3) == '1';
-//            boolean onRgtEdge = plm.charAt(3) == '7';
-//            boolean onTopEdge = plm.charAt(2) == 'A';
-//            boolean onBtmEdge = plm.charAt(2) == 'G';
-//            boolean isA1 = plm.substring(2, 4).equals("A1");
-//            boolean isA7 = plm.substring(2, 4).equals("A7");
-//            boolean isG1 = plm.substring(2, 4).equals("G1");
-//            boolean isG7 = plm.substring(2, 4).equals("G7");
-//            String plmE = p.replace(plm);
-//        }
-//        return deadEnds;
-//    }
-
 
 
     /**
