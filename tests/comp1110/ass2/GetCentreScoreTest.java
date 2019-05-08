@@ -1,11 +1,11 @@
 //package comp1110.ass2;
-
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.Timeout;
-
-import static org.junit.Assert.assertTrue;
-
+//
+//import org.junit.Rule;
+//import org.junit.Test;
+//import org.junit.rules.Timeout;
+//
+//import static org.junit.Assert.assertTrue;
+//
 //public class GetCentreScoreTest {
 //
 //    @Rule
