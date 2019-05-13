@@ -55,23 +55,26 @@ public class Viewer extends Application {
             ImageView imgV = new ImageView(img);
             imgV.setFitHeight(100); // Defining the Height and Width of the image
             imgV.setFitWidth(100);
-            if (layOutX == '2') {
+            if (layOutX == '1') {
                 layOutXFX = 100;
             }
-            if (layOutX == '3') {
+            if (layOutX == '2') {
                 layOutXFX = 200;
             }
-            if (layOutX == '4') {
+            if (layOutX == '3') {
                 layOutXFX = 300;
             }
-            if (layOutX == '5') {
+            if (layOutX == '4') {
                 layOutXFX = 400;
             }
-            if (layOutX == '6') {
+            if (layOutX == '5') {
                 layOutXFX = 500;
             }
-            if (layOutX == '7') {
+            if (layOutX == '6') {
                 layOutXFX = 600;
+            }
+            if (layOutX == '7') {
+                layOutXFX = 700;
             }
             if (layOutY == 'B') {
                 layOutYFX = 100;
