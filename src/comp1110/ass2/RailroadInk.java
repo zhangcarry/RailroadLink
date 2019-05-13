@@ -203,26 +203,20 @@ public static boolean areConnectedNeighbours(String tilePlacementStringA, String
      */
     public static String generateDiceRoll() {
         // FIXME Task 7: generate a dice roll
-        Random random = new Random();
-        //choose the position for B+number
-        int p = random.nextInt(4);
-        String[] c = new String[4];
-        //to place the random die roll in position
-        for (int i = 0; i<=3; i++){
-            if (i == p){
-                c[i] ="B" + random.nextInt(3);
-            }else{
-                c[i] = "A" + random.nextInt(6);
-            }
+    String[] c = new String[4];
+    for (int i = 0; i<= 3; i++){
+        if (i == 3){
+            c[i] = 'B' + String.valueOf((int)(Math.random()*3));
+        }else{
+            c[i] = 'A' + String.valueOf((int)(Math.random()*6));
         }
-        //convert a String array into a String
-        String a = "";
-        for (String i: c){
-             a += i;
-        }
-        return a;
     }
-
+    String a = "";
+    for (int i = 0; i<=3; i++){
+        a = a.concat(c[i]);
+    }
+    return a;
+    }
 
     /**
      * Given the current state of a game board, output an integer representing the sum of all the following factors
