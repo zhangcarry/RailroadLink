@@ -140,8 +140,8 @@ public class RailroadInk {
     //construct a method to determine the position of A and B
     public static String position(String a, String b){
         String position = "Not connected";
-        if (a.charAt(0) >= 'A' && b.charAt(0) >= 'A' && a.charAt(0) <= 'G' && b.charAt(0) <= 'G' &&
-                a.charAt(1) >= '0' && b.charAt(1) >= '0' && a.charAt(1) <= '6' && b.charAt(1) <= '6'){
+        if (a.charAt(0) >= 'A'-1 && b.charAt(0) >= 'A'-1 && a.charAt(0) <= 'G'+1 && b.charAt(0) <= 'G'+1 &&
+                a.charAt(1) >= '0'-1 && b.charAt(1) >= '0'-1 && a.charAt(1) <= '6'+1 && b.charAt(1) <= '6'+1){
             if (a.charAt(0)==b.charAt(0)){
                 if (a.charAt(1) == b.charAt(1) + 1){
                     position = "A is in the right side of B";
@@ -154,8 +154,8 @@ public class RailroadInk {
                 }else if(a.charAt(0) == b.charAt(0) - 1){
                     position = "A is in the upside of B";
                 }
-        }
-    } return position;
+            }
+        } return position;
     }
     public static boolean areConnectedNeighbours(String tilePlacementStringA, String tilePlacementStringB) {
         // FIXME Task 5: determine whether neighbouring placements are connected
@@ -199,7 +199,7 @@ public class RailroadInk {
                     for (String b: rightRailway){
                         if (a.equals(oriTileNA)&&b.equals(oriTileNB)){
                             areOriConnected = true;
-                }}}
+                        }}}
             }else if (position(positionA, positionB).equals("A is in the left side of B")){
                 for (String a: leftRailway){
                     for (String b: rightRailway){
@@ -245,11 +245,11 @@ public class RailroadInk {
                         }
                     }
                 }
-        } }
+            } }
         return isPositionConnected && areOriConnected;
     }
 
-        //return false;
+    //return false;
 
     /**
      * Given a well-formed board string representing an ordered list of placements,
@@ -271,44 +271,44 @@ public class RailroadInk {
         // FIXME Task 6: determine whether the given placement sequence is valid
         List<String> boards=new ArrayList<>();
         for (int i = 0 ; i < boardString.length(); i=i+5) {
-          boards.add(boardString.substring(i,i+5));
+            boards.add(boardString.substring(i,i+5));
         }
         String[] roots={"S2@10","S2@50","S3@30","S3B/0","S3B70","S2D/0","S2D70","S3F/0","S3F70","S2H10","S3H30","S2H50"};
         Set<String> in = new HashSet<>(Arrays.asList(roots));
 
         for (String board:boards){
-          if (((board.charAt(2)=='A'||board.charAt(2)=='G')&&(board.charAt(3)=='1'||board.charAt(3)=='3'||board.charAt(3)=='5'))
-            ||((board.charAt(3)=='0'||board.charAt(3)=='6')&&(board.charAt(2)=='B'||board.charAt(2)=='D'||board.charAt(2)=='F'))
-          ){
-            boolean flage=false;
-            for (String i :in){
-              if (areConnectedNeighbours(board,i)){
-                flage=true;
-              }
+            if (((board.charAt(2)=='A'||board.charAt(2)=='G')&&(board.charAt(3)=='1'||board.charAt(3)=='3'||board.charAt(3)=='5'))
+                    ||((board.charAt(3)=='0'||board.charAt(3)=='6')&&(board.charAt(2)=='B'||board.charAt(2)=='D'||board.charAt(2)=='F'))
+            ){
+                boolean flage=false;
+                for (String i :in){
+                    if (areConnectedNeighbours(board,i)){
+                        flage=true;
+                    }
+                }
+                if (!flage){
+                    return false;
+                }
             }
-            if (!flage){
-              return false;
-            }
-          }
         }
         int pre=boards.size();
         int now=-1;
         while (pre!=now){
-          pre=boards.size();
-          List<String> rm=new ArrayList<>();
-          for (String board:boards){
-            for (String s: in){
-              if (areConnectedNeighbours(s,board)) {
-                rm.add(board);
-              }
+            pre=boards.size();
+            List<String> rm=new ArrayList<>();
+            for (String board:boards){
+                for (String s: in){
+                    if (areConnectedNeighbours(s,board)) {
+                        rm.add(board);
+                    }
+                }
+                in.addAll(rm);
             }
-            in.addAll(rm);
-          }
-          boards.removeAll(rm);
-          now=boards.size();
+            boards.removeAll(rm);
+            now=boards.size();
         }
         if (boards.size()!=0){
-          return false;
+            return false;
         }
         return true;
     }
