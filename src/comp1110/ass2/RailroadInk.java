@@ -2,6 +2,7 @@ package comp1110.ass2;
 
 import javax.imageio.plugins.tiff.TIFFDirectory;
 import java.awt.font.FontRenderContext;
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class RailroadInk {
@@ -9,7 +10,7 @@ public class RailroadInk {
         Character [] faceB = {'0', '1', '2'};
         Character [] faceAS = {'0', '1', '2', '3', '4', '5'};
         if (tilePlacementString.charAt(0) == 'B'){
-            return (Arrays.asList(faceB).contains(tilePlacementString.charAt(1)));
+            return (Arrays.asList(faceB).contains(tilePlacementString.charAt(1))); // Specifying different cases for different dies
         }
         else {
             return (Arrays.asList(faceAS).contains(tilePlacementString.charAt(1)));
@@ -27,6 +28,10 @@ public class RailroadInk {
      * @param tilePlacementString a candidate tile placement string
      * @return true if the tile placement is well formed
      */
+
+    /**
+     * Developed by Carry Zhang
+     */
     public static boolean isTilePlacementWellFormed(String tilePlacementString) {
         // FIXME Task 2: determine whether a tile placement is well-formed
         Character [] row = {'A', 'B', 'C', 'D', 'E', 'F', 'G'};
@@ -34,8 +39,8 @@ public class RailroadInk {
         Character [] col = {'0', '1', '2', '3', '4', '5', '6'};
         Character [] ori = {'0', '1', '2', '3', '4', '5', '6', '7'};
         boolean isLengthValid = tilePlacementString.length() == 5;
-        if (isLengthValid) {
-            boolean isDieValid = Arrays.asList(die).contains(tilePlacementString.charAt(0));
+        if (isLengthValid) { // Defining booleans for the requirements
+            boolean isDieValid = Arrays.asList(die).contains(tilePlacementString.charAt(0)); // See if the element matches the ones in array using ArrayList
             boolean isRowValid = Arrays.asList(row).contains(tilePlacementString.charAt(2));
             boolean isColValid = Arrays.asList(col).contains(tilePlacementString.charAt(3));
             boolean isOriValid = Arrays.asList(ori).contains(tilePlacementString.charAt(4));
@@ -50,6 +55,10 @@ public class RailroadInk {
      *
      * @param boardString a board string describing the placement of one or more pieces
      * @return true if the board string is well-formed
+     */
+
+    /**
+     * Developed by Qixia Lu
      */
     public static boolean isBoardStringWellFormed(String boardString) {
         // FIXME Task 3: determine whether a board string is well-formed
@@ -105,6 +114,7 @@ public class RailroadInk {
      *
      * @return true if the placements are connected neighbours
      */
+
     //construct a method to replace the similar tiles.
     public static String replace(String a){
         String tile = a.substring(0,2);
@@ -162,23 +172,11 @@ public class RailroadInk {
         boolean isPositionConnected = false;
         boolean areOriConnected = false;
 
-        //create several String Array to group different types of tiles
-        String[] upHighway =
-                {"S00", "S01", "S03", "S10", "S20", "S40", "S41", "S50", "A30", "A32", "A33", "A40", "A50", "A51", "B00", "B10", "B14", "B20"};
-        String[] downHighway =
-                {"S01", "S02", "S03", "S12", "S20", "S42", "S43", "S50", "A30", "A31", "A32", "A40", "A52", "A53", "B02", "B12", "B16", "B20"};
-        String[] upRailway =
-                {"S02", "S11", "S12", "S13", "S30", "S42", "S43", "S51", "A00", "A01", "A10", "A20", "A22", "A23", "B02", "B13", "B15", "B21"};
-        String[] downRailway =
-                {"S00", "S10", "S11", "S13", "S30", "S40", "S41", "S51", "A02", "A03", "A10", "A20", "A21", "A22", "B00", "B11", "B17", "B21"};
-        String[] rightHighway =
-                {"S00", "S01", "S02", "S11", "S20", "S41", "S42", "S51", "A30", "A31", "A33", "A41", "A51", "A52", "B01", "B11", "B15", "B21"};
-        String[] leftHighway =
-                {"S00", "S02", "S03", "S13", "S20", "S40", "S43", "S51", "A31", "A32", "A33", "A41", "A50", "A53", "B03", "B13", "B17", "B21"};
-        String[] rightRailway =
-                {"S03", "S10", "S12", "S13", "S30", "S40", "S43", "S50", "A01", "A02", "A11", "A20", "A21", "A23", "B03", "B10", "B16", "B20"};
-        String[] leftRailway =
-                {"S01", "S10", "S11", "S12", "S30", "S41", "S42", "S50", "A00", "A03", "A11", "A21", "A22", "A23", "B01", "B12", "B14", "B20"};
+
+    /**
+     * Developed by Qixia Lu
+     */
+
 
         String oriTileA = tilePlacementStringA.substring(0, 2) + tilePlacementStringA.substring(4);
         String oriTileB = tilePlacementStringB.substring(0, 2) + tilePlacementStringB.substring(4);
@@ -251,6 +249,30 @@ public class RailroadInk {
 
     //return false;
 
+    public static boolean areConnectedNeighbours(String tilePlacementStringA, String tilePlacementStringB) {
+        // FIXME Task 5: determine whether neighbouring placements are connected
+        Placement a = new Placement();
+        String A = a.replace(tilePlacementStringA);
+        String B = a.replace(tilePlacementStringB);
+        String position = Board.neighbored(tilePlacementStringA, tilePlacementStringB);
+        if (!position.equals("Not Connected")) {
+            if (position.equals("A is in the right side of B")) {
+                return A.charAt(3) == B.charAt(1) && A.charAt(3) != '0';
+            }else if (position.equals("A is in the left side of B")){
+                return A.charAt(1) == B.charAt(3) && A.charAt(1) != '0';
+            }else if(position.equals("A is in the downside of B")){
+                return A.charAt(0) == B.charAt(2) && A.charAt(0) != '0';
+            }else if (position.equals("A is in the upside of B")){
+                return A.charAt(2) == B.charAt(0) && A.charAt(2) != '0';
+            }else{
+                return false;
+            }
+        }else{
+            return false;}
+    }
+
+
+
     /**
      * Given a well-formed board string representing an ordered list of placements,
      * determine whether the board string is valid.
@@ -267,6 +289,11 @@ public class RailroadInk {
      * @param boardString a board string representing some placement sequence
      * @return true if placement sequence is valid
      */
+
+    /**
+     * Developed by Keyu Liu
+     */
+
     public static boolean isValidPlacementSequence(String boardString) {
         // FIXME Task 6: determine whether the given placement sequence is valid
         List<String> boards=new ArrayList<>();
@@ -277,6 +304,7 @@ public class RailroadInk {
         Set<String> in = new HashSet<>(Arrays.asList(roots));
 
         for (String board:boards){
+
             if (((board.charAt(2)=='A'||board.charAt(2)=='G')&&(board.charAt(3)=='1'||board.charAt(3)=='3'||board.charAt(3)=='5'))
                     ||((board.charAt(3)=='0'||board.charAt(3)=='6')&&(board.charAt(2)=='B'||board.charAt(2)=='D'||board.charAt(2)=='F'))
             ){
@@ -289,6 +317,19 @@ public class RailroadInk {
                 if (!flage){
                     return false;
                 }
+
+          if (((board.charAt(2)=='A'||board.charAt(2)=='G')&&(board.charAt(3)=='1'||board.charAt(3)=='3'||board.charAt(3)=='5'))
+            ||((board.charAt(3)=='0'||board.charAt(3)=='6')&&(board.charAt(2)=='B'||board.charAt(2)=='D'||board.charAt(2)=='F'))
+          ){
+            boolean flage=false;
+            for (String i :in){
+              if (areConnectedNeighbours(board,i)){
+                flage=true;
+              }
+            }
+            if (!flage){
+                return false;
+
             }
         }
         int pre=boards.size();
@@ -323,16 +364,26 @@ public class RailroadInk {
      *
      * @return a String representing the die roll e.g. A0A4A3B2
      */
+
+    /**
+     * Developed by Qixia Lu
+     */
+
     public static String generateDiceRoll() {
         // FIXME Task 7: generate a dice roll
-        /*
-        Random random = new Random(); // Creating the generator.
-        Integer faceA = (random.nextInt(6)); // The generator for die A
-        Integer faceB = (random.nextInt(3)); // The generator for die B
-        int counta; // Counting how many times die A has been rolled, making sure counta is equal to 3 at the end.
-        int countb; // Counting how many times die B has been rolled, making sure counta is equal to 1 at the end.
-        */
-        return "";
+    String[] c = new String[4];
+    for (int i = 0; i<= 3; i++){
+        if (i == 3){
+            c[i] = 'B' + String.valueOf((int)(Math.random()*3));
+        }else{
+            c[i] = 'A' + String.valueOf((int)(Math.random()*6));
+        }
+    }
+    String a = "";
+    for (int i = 0; i<=3; i++){
+        a = a.concat(c[i]);
+    }
+    return a;
     }
 
     /**
@@ -346,16 +397,195 @@ public class RailroadInk {
      * @param boardString a board string representing a completed game
      * @return integer (positive or negative) for score *not* considering longest rail/highway
      */
-    public static int getBasicScore(String boardString) {
+
+    /**
+     * Developed by Qixia Lu
+     */
+
+    public static int getBasicScore (String boardString) {
         // FIXME Task 8: compute the basic score
-        /*
-        int exitScores; // Calculate the exit scores in current board.
-        int centreTiles; // Number of centre tiles used, also the score should be awarded.
-        int deadEnds; // Number of dead ends exists in the game state, the score should be deducted from the game.
-        // return (exitScores + centreTiles - deadEnds)
-        */
-        return -1;
+        ArrayList<String> tiles = new ArrayList<>();
+        List<List<String>> route = new LinkedList<>();
+        for (int i = 0; i<=boardString.length()-5; i+=5){
+            tiles.add(boardString.substring(i, i+5));
+        }
+        //compute the centre score
+        int centreScore = 0;
+        for (String i: tiles){
+            if((i.charAt(2) >= 'C' && i.charAt(2) <= 'E')
+                    && (i.charAt(3) >= '2' && i.charAt(3) <= '4')){
+                centreScore++;
+            }
+        }
+        //find B2 (not connect to exists) and divide it into A1 and A4
+        for(int i = 0; i<tiles.size(); i++){
+            if (!connectExists(tiles.get(i))){
+                String BA1;
+                String BA4;
+                int count =0;
+                if (tiles.get(i).substring(0,2).equals("B2")){
+                    String b2 = tiles.get(i);
+                    for (String a: tiles){
+                        if (areConnectedNeighbours(a, b2)){
+                            count++;
+                        }
+                    }
+                    if (count == 4){
+                        BA4 = "A4".concat(b2.substring(2));
+                        if (b2.charAt(4) % 2 == 0){
+                            BA1 = "A1".concat(b2.substring(2, 4)).concat("1");
+                        }else{
+                            BA1 = "A1".concat(b2.substring(2,4)).concat("0");
+                        }
+                        tiles.remove(b2);
+                        tiles.add(BA1);
+                        tiles.add(BA4);
+                    }
+                }
+            }
+        }
+        //compute routes (start from the tile connected to exist)
+        ArrayList<String> usedExists = new ArrayList<>();
+        for (int i =0; i<tiles.size(); i++){
+            String e = tiles.get(i);
+            if (connectExists(e) && !usedExists.contains(e)){
+                List<String> tile = new LinkedList<>();
+                List<String> result = new LinkedList<>();
+                usedExists.add(e);
+                tile.add(e);
+                List<String> tiles1 = new ArrayList<>(tiles);
+                while(!tile.isEmpty()){
+                    String t = tile.remove(0);
+                    result.add(t);
+                    for (int m = 0; m<tiles1.size(); m++){
+                        String t1 = tiles1.get(m);
+                        if (areConnectedNeighbours(t, t1)){
+                            tiles1.remove(t1);
+                            m--;
+                            tile.add(t1);
+                            if (connectExists(t1)){
+                                usedExists.add(t1);
+                                result.remove(t1);
+                            }
+                        }
+                    }
+                }
+                route.add(result);
+            }
+        }
+        //compute exists score
+        int endScore = 0;
+        int countEnds = 0;
+        for (int i = 0; i< route.size(); i++){
+            for (String t: route.get(i)){
+                if (connectExists(t)){
+                    countEnds ++;
+                }
+                //eliminate the situation when B2 connects to the exist
+                int count = 0;
+                if (t.substring(0,2).equals("B2")){
+                    for (String a: tiles){
+                        if (areConnectedNeighbours(t, a)){
+                            count++;
+                        }
+                    }
+                    if (count == 3){
+                        countEnds --;
+                    }
+                }
+            }
+            if (countEnds == 12){
+                endScore += 45;
+            }else{
+                endScore += countEnds*4-4;
+            }
+            countEnds = 0;
+        }
+        //compute dead ends according to whether all the sides of tile have been connected
+        int badScore = 0;
+        for (String t: tiles){
+            char pR = t.charAt(2);
+            char pL = t.charAt(3);
+            int count = 0;
+            if (t.charAt(0) == 'S' || t.substring(0, 2).equals("B2")){
+                for (String a: tiles){
+                    if (areConnectedNeighbours(t, a)){
+                        count ++;
+                    }
+                }
+                if (count!=4){
+                    count = deadEnds(t, pL, pR, count);
+                    badScore += count - 4;
+                }
+            }
+            String die = t.substring(0,2);
+            if (die.equals("A2") || die.equals("A3")){
+                for (String a: tiles){
+                    if (areConnectedNeighbours(t, a)){
+                        count ++;
+                    }
+                }
+                if (count != 3){
+                    count = deadEnds(t, pL, pR, count);
+                    badScore += count -3;
+                }
+            }
+            String[] die2 = {"A0", "A1", "A4", "A5", "B0", "B1"};
+            for (int j = 0; j< die2.length; j++){
+                if (die.equals(die2[j])){
+                    for (String a: tiles){
+                        if (areConnectedNeighbours(t, a)){
+                            count ++;
+                        }
+                    }
+                    if (count != 2){
+                        count = deadEnds(t, pL, pR, count);
+                        badScore += count -2;
+                    }
+                }
+            }
+        }
+        return centreScore + endScore + badScore;
     }
+    //compute the number of sides which have connected to edge of the board
+    public static int deadEnds (String t, char pL, char pR, int count){
+        Placement p = new Placement();
+        if (pL == '0' || pL == '6' || pR == 'A' || pR == 'G'){
+            //use the replace method to find whether the tile side has touched the edge
+            if (pL == '0'){
+                if (p.replace(t).charAt(3) != '0'){
+                    count++;
+                }
+            }
+            if (pL == '6'){
+                if (p.replace(t).charAt(1) != '0'){
+                    count++;
+                }
+            }
+            if (pR == 'A'){
+                if (p.replace(t).charAt(0) != '0'){
+                    count++;
+                }
+            }
+            if (pR == 'G'){
+                if (p.replace(t).charAt(2) != '0'){
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+    //find the tiles connecting to the exists
+    public static boolean connectExists(String tile){
+        String[] exists = {"A1", "A3", "A5", "B0", "D0", "F0", "G1", "G3", "G5", "B6", "D6", "F6"};
+        for (int i = 0; i<exists.length; i++){
+            if (tile.substring(2,4).equals(exists[i])){
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     /**
      * Given a valid boardString and a dice roll for the round,
