@@ -244,7 +244,7 @@ public static boolean areConnectedNeighbours(String tilePlacementStringA, String
                 centreScore++;
             }
         }
-        //find B2 (not connect to exists) and devide it into A1 and A4
+        //find B2 (not connect to exists) and divide it into A1 and A4
         for(int i = 0; i<tiles.size(); i++){
             if (!connectExists(tiles.get(i))){
                 String BA1;
