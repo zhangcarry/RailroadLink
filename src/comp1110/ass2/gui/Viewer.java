@@ -33,7 +33,7 @@ public class Viewer extends Application {
     private static final int BOARD_SIZE = 700;
 
 
-    private static final String URI_BASE = "assets/";
+    public static final String URI_BASE = "assets/";
 
     private final Group root = new Group();
     private final Group images = new Group(); // New group for placements
