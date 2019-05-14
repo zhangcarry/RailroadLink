@@ -9,6 +9,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.shape.Line;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 
@@ -24,12 +25,15 @@ public class Viewer extends Application {
     /* board layout */
     private static final int VIEWER_WIDTH = 1024;
     private static final int VIEWER_HEIGHT = 768;
+    private static final int BOARD_SIZE = 700;
+
 
     private static final String URI_BASE = "assets/";
 
     private final Group root = new Group();
     private final Group images = new Group(); // New group for placements
     private final Group controls = new Group();
+    private final Group grid = new Group();
     TextField textField;
 
     /**
@@ -72,9 +76,6 @@ public class Viewer extends Application {
             }
             if (layOutX == '6') {
                 layOutXFX = 600;
-            }
-            if (layOutX == '7') {
-                layOutXFX = 700;
             }
             if (layOutY == 'B') {
                 layOutYFX = 100;
@@ -127,6 +128,16 @@ public class Viewer extends Application {
         }
     }
 
+    void makeGrid() {
+        for (int i = 0; i <= BOARD_SIZE; i = i + 100) {
+            Line x = new Line(0,i,BOARD_SIZE,i);
+            Line y = new Line(i,0,i,BOARD_SIZE);
+            grid.getChildren().addAll(x,y);
+        }
+        int[] HwyExitX = {230, 550, 685, 550, 230, 95};
+        int[] HwyExitY = {45, 45, 340, 635, 635, 340};
+    }
+
     /**
      * Create a basic text field for input and a refresh button.
      */
@@ -152,8 +163,9 @@ public class Viewer extends Application {
         primaryStage.setTitle("StepsGame Viewer");
         Scene scene = new Scene(root, VIEWER_WIDTH, VIEWER_HEIGHT);
 
-        root.getChildren().addAll(controls,images); // Adding group images to group root
+        root.getChildren().addAll(controls,images,grid); // Adding group images to group root
 
+        makeGrid();
         makeControls();
 
         primaryStage.setScene(scene);
