@@ -256,7 +256,6 @@ public class RailroadInk {
     /**
      * Developed by Qixia Lu
      */
-
     public static int getBasicScore (String boardString) {
         // FIXME Task 8: compute the basic score
         ArrayList<String> tiles = new ArrayList<>();
