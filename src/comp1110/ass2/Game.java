@@ -6,7 +6,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -21,9 +20,12 @@ public class Game extends Application {
      * Dimensions
      */
 
-    private static final int WINDOW_WIDTH = 1440;
+    private static final int WINDOW_WIDTH = 1080;
     private static final int WINDOW_HEIGHT = 920;
     private static final int BOARD_SIZE = 700;
+    private static final int MARGIN = 110;
+    private static final int PIECE_SIZE = 100;
+    Button generate;
 
     /**
      * Groups for various components
@@ -32,6 +34,7 @@ public class Game extends Application {
     private final Group root = new Group();
     private final Group display = new Group();
     private final Group grid = new Group();
+    private final Group exitSigns = new Group();
     private final Group dice = new Group();
 
     /* Location of the asset images */
@@ -46,9 +49,45 @@ public class Game extends Application {
         double mouseX, mouseY;      // the last known mouse positions
         double startX, startY;
         String piece;
+        String PIECE_LOCATION = "comp1110/ass2/gui/assets/" + piece + ".png";
 
-        Dice(String piece) {
+        Dice(int ord, String piece) {
             this.piece = piece;
+            this.startX = MARGIN*2+BOARD_SIZE;
+            this.startY = MARGIN+100+(ord*100);
+            setLayoutX(startX);
+            setLayoutY(startY);
+            snapToHome();
+
+            setOnMouseDragged(event -> {      // mouse is being dragged
+                double movementX = event.getSceneX() - mouseX;
+                double movementY = event.getSceneY() - mouseY;
+                drag(movementX, movementY);
+                mouseX = event.getSceneX();
+                mouseY = event.getSceneY();
+            });
+
+
+        }
+
+        void drag(double movementX, double movementY) {
+            setLayoutX(getLayoutX() + movementX);
+            setLayoutY(getLayoutY() + movementY);
+        }
+
+        private boolean onBoard() {
+            return getLayoutX() > (MARGIN) && (getLayoutX() < (WINDOW_WIDTH - MARGIN - BOARD_SIZE))
+                    && getLayoutY() > (MARGIN) && (getLayoutY() < (WINDOW_HEIGHT - MARGIN));
+        }
+
+        private void snapToHome() {
+            setImage(new Image(PIECE_LOCATION));
+            setLayoutX(startX);
+            setLayoutY(startY);
+            setRotate(0);
+            setFitHeight(PIECE_SIZE);
+            setFitWidth(PIECE_SIZE);
+            setOpacity(1.0);
         }
     }
 
@@ -58,10 +97,13 @@ public class Game extends Application {
 
     void makeGrid() {
         for (int i = 0; i <= BOARD_SIZE; i = i + 100) {
-            Line x = new Line(110,i+110,BOARD_SIZE+110,i+110);
-            Line y = new Line(i+110,110,i+110,BOARD_SIZE+110);
+            Line x = new Line(0,i,BOARD_SIZE,i);
+            Line y = new Line(i,0,i,BOARD_SIZE);
             grid.getChildren().addAll(x,y);
         }
+        grid.setLayoutX(MARGIN);
+        grid.setLayoutY(MARGIN);
+
 
         /* Railway and Highway exits*/
 
@@ -85,7 +127,7 @@ public class Game extends Application {
             if (i == 5) {
                 imgv.setRotate(270);
             }
-            grid.getChildren().add(imgv);
+            exitSigns.getChildren().add(imgv);
         }
 
         for (int i = 0; i < RilExitX.length; i++) {
@@ -104,8 +146,9 @@ public class Game extends Application {
             if (i == 4 || i == 5) {
                 imgv.setRotate(90);
             }
-            grid.getChildren().add(imgv);
+            exitSigns.getChildren().add(imgv);
         }
+        makeControls();
     }
 
     /**
@@ -127,28 +170,32 @@ public class Game extends Application {
      * Buttons and various controls
      */
 
-    void makeControls() {
-        Button generate = new Button("Generate Dice Roll");
-        generate.setOnAction(e -> {
+    private void makeControls() {
+        generate = new Button("Generate Dice Roll");
+        generate.setOnAction(event -> {
             dice.getChildren().clear();
             String diceroll = RailroadInk.generateDiceRoll();
-            System.out.println(diceroll);
-            dice.getChildren().add(generate);
+            for (int i = 0; i < 4; i++) {
+                String piece = diceroll.substring(2 * i, 2 * i + 2);
+                dice.getChildren().add(new Dice(i, piece));
+            }
         });
-    }
 
+        generate.setLayoutX(MARGIN*2+BOARD_SIZE);
+        generate.setLayoutY(BOARD_SIZE+MARGIN);
+    }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("Railroad Link");
         Scene scene = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT);
 
-        // makeControls();
         displayScore("");
         makeGrid();
-        root.getChildren().addAll(grid,display);// Adding group images to group root
+        root.getChildren().addAll(grid,display,exitSigns,dice);// Adding group images to group root
 
         primaryStage.setScene(scene);
         primaryStage.show();
     }
+
 }
