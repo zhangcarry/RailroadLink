@@ -8,6 +8,10 @@ import org.junit.rules.Timeout;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+/**
+ * Developed by Qixia Lu
+ */
+
 public class ConnectExistsTest {
     @Rule
     public Timeout globalTimeout = Timeout.millis(2000);

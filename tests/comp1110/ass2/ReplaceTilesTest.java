@@ -8,6 +8,10 @@ import org.junit.rules.Timeout;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 
+/**
+ * Developed by Qixia Lu
+ */
+
 public class ReplaceTilesTest {
     Placement a = new Placement();
     //different types of dies:

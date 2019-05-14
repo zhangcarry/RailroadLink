@@ -6,6 +6,10 @@ import org.junit.rules.Timeout;
 
 import static org.junit.Assert.assertTrue;
 
+/**
+ * Developed by Qixia Lu
+ */
+
 public class NeighboredTilesTest {
 
     @Rule

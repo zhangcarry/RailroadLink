@@ -7,8 +7,7 @@ import org.junit.rules.Timeout;
 import static org.junit.Assert.assertTrue;
 
 /**
- * The test for Task 6.
- * Carry Zhang u6499267
+ * Developed by Qixia Lu
  */
 
 public class T6Test {

@@ -1,5 +1,9 @@
 package comp1110.ass2;
 
+/**
+ * Developed by Qixia Lu
+ */
+
 public class Board {
     //find the position of two tiles
     public static String neighbored(String a, String b){

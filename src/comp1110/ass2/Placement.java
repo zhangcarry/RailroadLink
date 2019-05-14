@@ -2,6 +2,10 @@ package comp1110.ass2;
 
 import java.util.HashMap;
 
+/**
+ * Developed by Qixia Lu
+ */
+
 public class Placement {
     //name each tile
     public HashMap<String, String> map = new HashMap<>();

@@ -28,6 +28,10 @@ public class RailroadInk {
      * @param tilePlacementString a candidate tile placement string
      * @return true if the tile placement is well formed
      */
+
+    /**
+     * Developed by Carry Zhang
+     */
     public static boolean isTilePlacementWellFormed(String tilePlacementString) {
         // FIXME Task 2: determine whether a tile placement is well-formed
         Character [] row = {'A', 'B', 'C', 'D', 'E', 'F', 'G'};
@@ -51,6 +55,10 @@ public class RailroadInk {
      *
      * @param boardString a board string describing the placement of one or more pieces
      * @return true if the board string is well-formed
+     */
+
+    /**
+     * Developed by Qixia Lu
      */
     public static boolean isBoardStringWellFormed(String boardString) {
         // FIXME Task 3: determine whether a board string is well-formed
@@ -106,7 +114,12 @@ public class RailroadInk {
      *
      * @return true if the placements are connected neighbours
      */
-public static boolean areConnectedNeighbours(String tilePlacementStringA, String tilePlacementStringB) {
+
+    /**
+     * Developed by Qixia Lu
+     */
+
+    public static boolean areConnectedNeighbours(String tilePlacementStringA, String tilePlacementStringB) {
         // FIXME Task 5: determine whether neighbouring placements are connected
         Placement a = new Placement();
         String A = a.replace(tilePlacementStringA);
@@ -145,6 +158,11 @@ public static boolean areConnectedNeighbours(String tilePlacementStringA, String
      * @param boardString a board string representing some placement sequence
      * @return true if placement sequence is valid
      */
+
+    /**
+     * Developed by Keyu Liu
+     */
+
     public static boolean isValidPlacementSequence(String boardString) {
         // FIXME Task 6: determine whether the given placement sequence is valid
         List<String> boards=new ArrayList<>();
@@ -201,6 +219,11 @@ public static boolean areConnectedNeighbours(String tilePlacementStringA, String
      *
      * @return a String representing the die roll e.g. A0A4A3B2
      */
+
+    /**
+     * Developed by Qixia Lu
+     */
+
     public static String generateDiceRoll() {
         // FIXME Task 7: generate a dice roll
     String[] c = new String[4];
@@ -229,6 +252,11 @@ public static boolean areConnectedNeighbours(String tilePlacementStringA, String
      * @param boardString a board string representing a completed game
      * @return integer (positive or negative) for score *not* considering longest rail/highway
      */
+
+    /**
+     * Developed by Qixia Lu
+     */
+
     public static int getBasicScore (String boardString) {
         // FIXME Task 8: compute the basic score
         ArrayList<String> tiles = new ArrayList<>();
