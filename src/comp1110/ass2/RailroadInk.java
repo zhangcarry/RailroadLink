@@ -203,26 +203,20 @@ public static boolean areConnectedNeighbours(String tilePlacementStringA, String
      */
     public static String generateDiceRoll() {
         // FIXME Task 7: generate a dice roll
-        Random random = new Random();
-        //choose the position for B+number
-        int p = random.nextInt(4);
-        String[] c = new String[4];
-        //to place the random die roll in position
-        for (int i = 0; i<=3; i++){
-            if (i == p){
-                c[i] ="B" + random.nextInt(3);
-            }else{
-                c[i] = "A" + random.nextInt(6);
-            }
+    String[] c = new String[4];
+    for (int i = 0; i<= 3; i++){
+        if (i == 3){
+            c[i] = 'B' + String.valueOf((int)(Math.random()*3));
+        }else{
+            c[i] = 'A' + String.valueOf((int)(Math.random()*6));
         }
-        //convert a String array into a String
-        String a = "";
-        for (String i: c){
-             a += i;
-        }
-        return a;
     }
-
+    String a = "";
+    for (int i = 0; i<=3; i++){
+        a = a.concat(c[i]);
+    }
+    return a;
+    }
 
     /**
      * Given the current state of a game board, output an integer representing the sum of all the following factors
@@ -242,7 +236,7 @@ public static boolean areConnectedNeighbours(String tilePlacementStringA, String
         for (int i = 0; i<=boardString.length()-5; i+=5){
             tiles.add(boardString.substring(i, i+5));
         }
-        //find the centre score
+        //compute the centre score
         int centreScore = 0;
         for (String i: tiles){
             if((i.charAt(2) >= 'C' && i.charAt(2) <= 'E')
@@ -250,7 +244,7 @@ public static boolean areConnectedNeighbours(String tilePlacementStringA, String
                 centreScore++;
             }
         }
-        //find B2 (not connect to exists) and change it into A1 and A4
+        //find B2 (not connect to exists) and devide it into A1 and A4
         for(int i = 0; i<tiles.size(); i++){
             if (!connectExists(tiles.get(i))){
                 String BA1;
@@ -277,7 +271,7 @@ public static boolean areConnectedNeighbours(String tilePlacementStringA, String
                 }
             }
         }
-        //compute routes
+        //compute routes (start from the tile connected to exist)
         ArrayList<String> usedExists = new ArrayList<>();
         for (int i =0; i<tiles.size(); i++){
             String e = tiles.get(i);
@@ -314,6 +308,7 @@ public static boolean areConnectedNeighbours(String tilePlacementStringA, String
                 if (connectExists(t)){
                     countEnds ++;
                 }
+                //eliminate the situation when B2 connects to the exist
                 int count = 0;
                 if (t.substring(0,2).equals("B2")){
                     for (String a: tiles){
@@ -333,56 +328,57 @@ public static boolean areConnectedNeighbours(String tilePlacementStringA, String
             }
             countEnds = 0;
         }
-        //compute dead ends
+        //compute dead ends according to whether all the sides of tile have been connected
         int badScore = 0;
         for (String t: tiles){
             char pR = t.charAt(2);
             char pL = t.charAt(3);
-                int count = 0;
-                if (t.charAt(0) == 'S' || t.substring(0, 2).equals("B2")){
+            int count = 0;
+            if (t.charAt(0) == 'S' || t.substring(0, 2).equals("B2")){
+                for (String a: tiles){
+                    if (areConnectedNeighbours(t, a)){
+                        count ++;
+                    }
+                }
+                if (count!=4){
+                    count = deadEnds(t, pL, pR, count);
+                    badScore += count - 4;
+                }
+            }
+            String die = t.substring(0,2);
+            if (die.equals("A2") || die.equals("A3")){
+                for (String a: tiles){
+                    if (areConnectedNeighbours(t, a)){
+                        count ++;
+                    }
+                }
+                if (count != 3){
+                    count = deadEnds(t, pL, pR, count);
+                    badScore += count -3;
+                }
+            }
+            String[] die2 = {"A0", "A1", "A4", "A5", "B0", "B1"};
+            for (int j = 0; j< die2.length; j++){
+                if (die.equals(die2[j])){
                     for (String a: tiles){
                         if (areConnectedNeighbours(t, a)){
                             count ++;
                         }
                     }
-                    if (count!=4){
+                    if (count != 2){
                         count = deadEnds(t, pL, pR, count);
-                        badScore += count - 4;
+                        badScore += count -2;
                     }
                 }
-                String die = t.substring(0,2);
-                if (die.equals("A2") || die.equals("A3")){
-                    for (String a: tiles){
-                        if (areConnectedNeighbours(t, a)){
-                            count ++;
-                        }
-                    }
-                    if (count != 3){
-                        count = deadEnds(t, pL, pR, count);
-                        badScore += count -3;
-                    }
-                }
-                String[] die2 = {"A0", "A1", "A4", "A5", "B0", "B1"};
-                for (int j = 0; j< die2.length; j++){
-                    if (die.equals(die2[j])){
-                        for (String a: tiles){
-                            if (areConnectedNeighbours(t, a)){
-                                count ++;
-                            }
-                        }
-                        if (count != 2){
-                            count = deadEnds(t, pL, pR, count);
-                            badScore += count -2;
-                        }
-                    }
             }
         }
         return centreScore + endScore + badScore;
     }
-    //compute the deadEnds in the edges of the board
-    private static int deadEnds (String t, char pL, char pR, int count){
+    //compute the number of sides which have connected to edge of the board
+    public static int deadEnds (String t, char pL, char pR, int count){
         Placement p = new Placement();
         if (pL == '0' || pL == '6' || pR == 'A' || pR == 'G'){
+            //use the replace method to find whether the tile side has touched the edge
             if (pL == '0'){
                 if (p.replace(t).charAt(3) != '0'){
                     count++;
@@ -407,7 +403,7 @@ public static boolean areConnectedNeighbours(String tilePlacementStringA, String
         return count;
     }
     //find the tiles connecting to the exists
-    private static boolean connectExists(String tile){
+    public static boolean connectExists(String tile){
         String[] exists = {"A1", "A3", "A5", "B0", "D0", "F0", "G1", "G3", "G5", "B6", "D6", "F6"};
         for (int i = 0; i<exists.length; i++){
             if (tile.substring(2,4).equals(exists[i])){
