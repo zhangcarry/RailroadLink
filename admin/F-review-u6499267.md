@@ -9,4 +9,4 @@ Review Comments:
   - Fails 2 tests;
   - Names of variables are bit tricky to understand;
   - Good use of other methods in the file;
-  - The use of loops makes logical sense, also easies readability;
+  - The use of loops makes logical sense, but may affect overall system performance due to memory usage;
