@@ -9,6 +9,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import comp1110.ass2.RailroadInk;
 
 /**
  * Developed by Carry Zhang, inspired by the code from the Game class in Assignment 1
@@ -148,7 +149,7 @@ public class Game extends Application {
             }
             exitSigns.getChildren().add(imgv);
         }
-        makeControls();
+        //makeControls();
     }
 
     /**
