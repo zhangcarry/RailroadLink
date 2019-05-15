@@ -50,7 +50,6 @@ public class Game extends Application {
         double mouseX, mouseY;      // the last known mouse positions
         double startX, startY;
         String piece;
-        String PIECE_LOCATION = "comp1110/ass2/gui/assets/" + piece + ".png";
 
         Dice(int ord, String piece) {
             this.piece = piece;
@@ -66,6 +65,7 @@ public class Game extends Application {
                 drag(movementX, movementY);
                 mouseX = event.getSceneX();
                 mouseY = event.getSceneY();
+                setOpacity(0.8);
             });
 
 
@@ -92,11 +92,21 @@ public class Game extends Application {
         }
 
         /**
+         * Get the path of piece image
+         * @param piece 2-character string of the piece
+         * @return a path string of the given piece
+         */
+
+        String pieceLocation(String piece) {
+            return PIECE_LOCATION+piece+".png";
+        }
+
+        /**
          * Return the piece to starting position
          */
 
         private void snapToHome() {
-            setImage(new Image(PIECE_LOCATION));
+            setImage(new Image(pieceLocation(piece)));
             setLayoutX(startX);
             setLayoutY(startY);
             setRotate(0);
@@ -165,7 +175,6 @@ public class Game extends Application {
             }
             exitSigns.getChildren().add(imgv);
         }
-        //makeControls();
     }
 
     /**
@@ -188,7 +197,7 @@ public class Game extends Application {
      */
 
     private void makeControls() {
-        generate = new Button("Generate Dice Roll");
+        generate = new Button("Generate");
         generate.setOnAction(event -> {
             dice.getChildren().clear();
             String diceroll = RailroadInk.generateDiceRoll();
@@ -197,9 +206,14 @@ public class Game extends Application {
                 dice.getChildren().add(new Dice(i, piece));
             }
         });
-
-        generate.setLayoutX(MARGIN*2+BOARD_SIZE);
+        generate.setLayoutX(MARGIN*2+BOARD_SIZE); // set position for the button
         generate.setLayoutY(BOARD_SIZE+MARGIN);
+        Button clear = new Button("Clear");
+        clear.setOnAction(event -> {
+            dice.getChildren().clear();
+        });
+        clear.setLayoutX(MARGIN*2+BOARD_SIZE+30);
+        clear.setLayoutY(BOARD_SIZE+MARGIN);
     }
 
     @Override
@@ -207,9 +221,9 @@ public class Game extends Application {
         primaryStage.setTitle("Railroad Link");
         Scene scene = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT);
 
-        displayScore("");
+        displayScore(""); // temporary placeholder
         makeGrid();
-        root.getChildren().addAll(grid,display,exitSigns,dice);// Adding group images to group root
+        root.getChildren().addAll(grid,display,exitSigns,dice);// Adding groups to group root
 
         primaryStage.setScene(scene);
         primaryStage.show();
