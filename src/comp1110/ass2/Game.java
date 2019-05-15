@@ -9,6 +9,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import comp1110.ass2.RailroadInk;
 
 /**
  * Developed by Carry Zhang, inspired by the code from the Game class in Assignment 1
@@ -70,15 +71,29 @@ public class Game extends Application {
 
         }
 
+        /**
+         * Move the piece to the new position
+         * @param movementX & movementY distance the mouse has moved since its original position
+         */
+
         void drag(double movementX, double movementY) {
             setLayoutX(getLayoutX() + movementX);
             setLayoutY(getLayoutY() + movementY);
         }
 
+        /**
+         * Check if the piece is on the board
+         * @return true if piece is on board
+         */
+
         private boolean onBoard() {
             return getLayoutX() > (MARGIN) && (getLayoutX() < (WINDOW_WIDTH - MARGIN - BOARD_SIZE))
                     && getLayoutY() > (MARGIN) && (getLayoutY() < (WINDOW_HEIGHT - MARGIN));
         }
+
+        /**
+         * Return the piece to starting position
+         */
 
         private void snapToHome() {
             setImage(new Image(PIECE_LOCATION));
@@ -105,7 +120,9 @@ public class Game extends Application {
         grid.setLayoutY(MARGIN);
 
 
-        /* Railway and Highway exits*/
+        /**
+         * Railway and Highway Exits
+         */
 
         int[] HwyExitX = {210, 610, 210, 610, 40, 780};
         int[] HwyExitY = {40, 40, 780, 780, 410, 410};
@@ -148,7 +165,7 @@ public class Game extends Application {
             }
             exitSigns.getChildren().add(imgv);
         }
-        makeControls();
+        //makeControls();
     }
 
     /**
