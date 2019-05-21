@@ -7,6 +7,9 @@ import org.junit.rules.Timeout;
 import static org.junit.Assert.assertTrue;
 
 
+/**
+ * Developed by Carry Zhang
+ */
 public class T6Test {
     @Rule
     public Timeout globalTimeout = Timeout.millis(2000);

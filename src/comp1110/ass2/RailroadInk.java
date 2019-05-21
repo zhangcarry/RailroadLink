@@ -6,6 +6,9 @@ import java.lang.reflect.Array;
 import java.util.*;
 
 public class RailroadInk {
+    static private String[] S = {"HHRH", "HRRR", "HHHH", "RRRR", "HRRH", "HRHR"};
+    static private String[] A = {"RNNR", "RNRN", "RRRN", "HHHN", "HNHN", "HNNH"};
+    static private String[] B = {"HNRN", "HRNN", "HRHR"};
     public static boolean isFaceValid(String tilePlacementString) {
         Character [] faceB = {'0', '1', '2'};
         Character [] faceAS = {'0', '1', '2', '3', '4', '5'};
@@ -165,48 +168,78 @@ public class RailroadInk {
 
     public static boolean isValidPlacementSequence(String boardString) {
         // FIXME Task 6: determine whether the given placement sequence is valid
-        List<String> boards=new ArrayList<>();
-        for (int i = 0 ; i < boardString.length(); i=i+5) {
-          boards.add(boardString.substring(i,i+5));
+        List<String> boards = new LinkedList<>();
+        for (int i = 0; i < boardString.length(); i = i + 5) {
+            boards.add(boardString.substring(i, i + 5));
         }
-        String[] roots={"S2@10","S2@50","S3@30","S3B/0","S3B70","S2D/0","S2D70","S3F/0","S3F70","S2H10","S3H30","S2H50"};
+        String[] roots = {"S2@10", "S2@50", "S3@30", "S3B/0", "S3B70", "S2D/0", "S2D70", "S3F/0", "S3F70", "S2H10", "S3H30", "S2H50"};
         Set<String> in = new HashSet<>(Arrays.asList(roots));
-
-        for (String board:boards){
-          if (((board.charAt(2)=='A'||board.charAt(2)=='G')&&(board.charAt(3)=='1'||board.charAt(3)=='3'||board.charAt(3)=='5'))
-            ||((board.charAt(3)=='0'||board.charAt(3)=='6')&&(board.charAt(2)=='B'||board.charAt(2)=='D'||board.charAt(2)=='F'))
-          ){
-            boolean flage=false;
-            for (String i :in){
-              if (areConnectedNeighbours(board,i)){
-                flage=true;
-              }
+        boards.addAll(Arrays.asList(roots));
+        List<String> checkValid = new ArrayList<>(boards);
+        //判断不合法的连接
+        for (int i = 0; i < checkValid.size(); i++) {
+            for (int j = i + 1; j < checkValid.size(); j++) {
+                if (Math.abs(checkValid.get(i).charAt(2) - checkValid.get(j).charAt(2)) == 0 &&
+                        Math.abs(checkValid.get(i).charAt(3) - checkValid.get(j).charAt(3)) == 0
+                ) {
+                    return false;
+                }
+                if (!areConnectedNeighbours(checkValid.get(i), checkValid.get(j))
+                        && Math.abs(checkValid.get(i).charAt(2) - checkValid.get(j).charAt(2))
+                        + Math.abs(checkValid.get(i).charAt(3) - checkValid.get(j).charAt(3)) == 1) {
+                    int a2Tb2 = checkValid.get(i).charAt(2) - checkValid.get(j).charAt(2);
+                    int a3Tb3 = checkValid.get(i).charAt(3) - checkValid.get(j).charAt(3);
+                    int aDirection = 0;
+                    if (a2Tb2 > 0) {
+                        aDirection = 0;
+                    } else if (a2Tb2 < 0) {
+                        aDirection = 2;
+                    } else if (a3Tb3 > 0) {
+                        aDirection = 3;
+                    } else {
+                        aDirection = 1;
+                    }
+                    char aType = getDirectionType(checkValid.get(i), aDirection);
+                    char bType = getDirectionType(checkValid.get(j), (2 + aDirection) % 4);
+                    if (aType != bType && aType != 'N' && bType != 'N') {
+                        return false;
+                    }
+                }
             }
-            if (!flage){
-                return false;
-            }
-          }
         }
-        int pre=boards.size();
-        int now=-1;
-        while (pre!=now){
-          pre=boards.size();
-          List<String> rm=new ArrayList<>();
-          for (String board:boards){
-            for (String s: in){
-              if (areConnectedNeighbours(s,board)) {
-                rm.add(board);
-              }
+        //判断合法连接
+        boards.removeAll(Arrays.asList(roots));
+        int pre = boards.size();
+        int now = -1;
+        while (pre != now) {
+            pre = boards.size();
+            List<String> rm = new LinkedList<>();
+            for (String board : boards) {
+                for (String s : in) {
+                    if (areConnectedNeighbours(s, board)) {
+                        rm.add(board);
+                    }
+                }
+                in.addAll(rm);
             }
-            in.addAll(rm);
-          }
-          boards.removeAll(rm);
-          now=boards.size();
+            boards.removeAll(rm);
+            now = boards.size();
         }
-        if (boards.size()!=0){
-          return false;
+        if (boards.size() != 0) {
+            return false;
         }
         return true;
+    }
+    private static char getDirectionType(String board, Integer direction) {
+        Map<Character, String[]> map = new HashMap<>();
+        map.put('S', S);
+        map.put('A', A);
+        map.put('B', B);
+        String string = map.get(board.charAt(0))[Integer.parseInt(String.valueOf(board.charAt(1)))];
+        if (board.charAt(4) >= '4') {
+            string = String.valueOf(string.charAt(0)) + string.charAt(3) + string.charAt(2) + string.charAt(1);
+        }
+        return string.charAt((8 + direction - Integer.parseInt(String.valueOf(board.charAt(4)))) % 4);
     }
 
     /**
@@ -226,19 +259,19 @@ public class RailroadInk {
 
     public static String generateDiceRoll() {
         // FIXME Task 7: generate a dice roll
-    String[] c = new String[4];
-    for (int i = 0; i<= 3; i++){
-        if (i == 3){
-            c[i] = 'B' + String.valueOf((int)(Math.random()*3));
-        }else{
-            c[i] = 'A' + String.valueOf((int)(Math.random()*6));
+        String[] c = new String[4];
+        for (int i = 0; i<= 3; i++){
+            if (i == 3){
+                c[i] = 'B' + String.valueOf((int)(Math.random()*3));
+            }else{
+                c[i] = 'A' + String.valueOf((int)(Math.random()*6));
+            }
         }
-    }
-    String a = "";
-    for (int i = 0; i<=3; i++){
-        a = a.concat(c[i]);
-    }
-    return a;
+        String a = "";
+        for (int i = 0; i<=3; i++){
+            a = a.concat(c[i]);
+        }
+        return a;
     }
 
     /**
@@ -451,14 +484,97 @@ public class RailroadInk {
      */
     public static String generateMove(String boardString, String diceRoll) {
         // FIXME Task 10: generate a valid move
-        /*
-        Random random = new Random(); // Creating the generator.
-        boolean formed = isBoardStringWellFormed(boardString); // Check if the boardString input is formed.
-        String [] placements; // An array of valid placement for the round.
-        String placementsStr; // The string of valid placements.
-        */
-        return null;
+        //map to save exits status
+        //example: {0H1H} means two exits in direction of up and right with both are highway
+        String exit = "S2@10S2@50S3@30S3B/0S3B70S2D/0S2D70S3F/0S3F70S2H10S3H30S2H50" + boardString;
+        Map<String, String> boardStates = new HashMap<>();
+        Map<String, String> boardPosition = new HashMap<>();
+        for (int i = 0; i < exit.length(); i = i + 5) {
+            String board = exit.substring(i, i + 5);
+            boardPosition.put(board.substring(2, 4), board);
+            boardStates.put(board, "");
+        }
+        int[] dirY = {0, 1, 0, -1};
+        int[] dirX = {-1, 0, 1, 0};
+        for (int i = 0; i < exit.length(); i = i + 5) {
+            String board = exit.substring(i, i + 5);
+            for (int j = 0; j < 4; j++) {
+                char direcX = (char) (board.charAt(2) + dirX[j]);
+                char direcY = (char) (board.charAt(3) + dirY[j]);
+                if (boardPosition.get("" + direcX + direcY) == null
+                        && direcX <= 'G' && direcX >= 'A'
+                        && direcY <= '6' && direcY >= '0'
+                        && getDirectionType(board, j) != 'N'
+                ) {
+                    String change = boardStates.get(board) + j + getDirectionType(board, j);
+                    boardStates.put(board, change);
+                }
+            }
+        }
+        StringBuilder result = new StringBuilder();
+        boolean change = true;
+        while (change) {
+            change = false;
+            Set<String> boardSet = new HashSet<>(boardStates.keySet());
+            for (String board : boardSet) {
+                String connect = boardStates.get(board);
+                if (!"".equals(connect)) {
+                    for (int j = 0; j < connect.length(); j = j + 2) {
+                        String directionAndType = connect.substring(j, j + 2);
+                        int[] indexToRemove = new int[8];
+                        for (int i = 0; i < diceRoll.length(); i = i + 2) {
+                            String dice = diceRoll.substring(i, i + 2);
+                            int dir = (2 + Integer.parseInt(String.valueOf(directionAndType.charAt(0)))) % 4;
+                            int oldDir = Integer.parseInt(String.valueOf(directionAndType.charAt(0)));
+                            for (int d = 0; d < 8; d++) {
+                                //good position and orientation
+                                if (getDirectionType(dice + "A0" + d, dir) == directionAndType.charAt(1)) {
+                                    String newBoard = dice + (char) (board.charAt(2) + dirX[oldDir]) + (char) (board.charAt(3) + dirY[oldDir]) + d;
+                                    if (newBoard.charAt(2) <= 'G' && newBoard.charAt(2) >= 'A'
+                                            && newBoard.charAt(3) <= '6' && newBoard.charAt(3) >= '0'
+                                            && isValidPlacementSequence(boardString + newBoard)
+                                            && boardPosition.get(newBoard.substring(2, 4)) == null) {
+                                        boardString = boardString + newBoard;
+                                        indexToRemove[i] = 1;
+                                        change = true;
+                                        boardStates.put(newBoard, "");
+                                        result.append(newBoard);
+                                        boardPosition.put(newBoard.substring(2, 4), newBoard);
+                                        for (int k = 0; k < 4; k++) {
+                                            char direcX = (char) (newBoard.charAt(2) + dirX[k]);
+                                            char direcY = (char) (newBoard.charAt(3) + dirY[k]);
+                                            String boardToChange = boardPosition.get("" + direcX + direcY);
+                                            if (boardToChange != null) {
+                                                String quekou = boardStates.get(boardToChange);
+                                                int position = quekou.indexOf("" + (2 + Integer.parseInt(String.valueOf(k))) % 4);
+                                                if (position != -1) {
+                                                    quekou = quekou + quekou.substring(0, position) + quekou.substring(position + 2);
+                                                    boardStates.put(boardToChange, quekou);
+                                                }
+                                            }
+                                            else if (direcX <= 'G' && direcX >= 'A'
+                                                    && direcY <= '6' && direcY >= '0'
+                                                    && getDirectionType(newBoard, k) != 'N') {
+                                                boardStates.put(newBoard, boardStates.get(newBoard) + k + getDirectionType(newBoard, k));
+
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        for (int i = 0; i < indexToRemove.length; i++) {
+                            if (indexToRemove[i] == 1) {
+                                diceRoll = diceRoll.substring(0, i) + diceRoll.substring(i + 2);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return result.toString();
     }
+
 
     /**
      * Given the current state of a game board, output an integer representing the sum of all the factors contributing

@@ -1,9 +1,18 @@
-Reviewer: Mary Jones (u2345678)
+Reviewer: Keyu Liu (u6342137)
 Component: <...>
-Author: Bob Smith (u3456789)
+Author: Qixia lu (u6805636)
 
 Review Comments:
 
-1. HelloWorld.java:1-16 Use proper capitalization.
-2. HelloWorldTest.java:21 This test will pass with "hello world", when it should fail.
-3. <...>
+1.Railroadlink.java 66-145
+Reasonable comment has been added;
+No logic errors;
+Memory Friendly.
+
+2.Railroadlink.java 260-475
+Well-formed,easy to read;
+No logic or functional error.
+
+3.ConnectExistsTest.java
+No logic or functional error;
+Would be better if more comments added.
