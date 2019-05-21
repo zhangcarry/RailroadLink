@@ -9,7 +9,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import comp1110.ass2.RailroadInk;
 
 /**
  * Developed by Carry Zhang, inspired by the code from the Game class in Assignment 1
@@ -26,7 +25,7 @@ public class Game extends Application {
     private static final int BOARD_SIZE = 700;
     private static final int MARGIN = 110;
     private static final int PIECE_SIZE = 100;
-    Button generate;
+    public Button generate;
 
     /**
      * Groups for various components
@@ -37,6 +36,7 @@ public class Game extends Application {
     private final Group grid = new Group();
     private final Group exitSigns = new Group();
     private final Group dice = new Group();
+    private final Group buttons = new Group();
 
     /* Location of the asset images */
 
@@ -214,6 +214,7 @@ public class Game extends Application {
         });
         clear.setLayoutX(MARGIN*2+BOARD_SIZE+30);
         clear.setLayoutY(BOARD_SIZE+MARGIN);
+        buttons.getChildren().addAll(generate);
     }
 
     @Override
@@ -221,9 +222,12 @@ public class Game extends Application {
         primaryStage.setTitle("Railroad Link");
         Scene scene = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT);
 
+        makeControls();
+        //Button generate = new Button("Gen");
+        //buttons.getChildren().addAll(generate);
         displayScore(""); // temporary placeholder
         makeGrid();
-        root.getChildren().addAll(grid,display,exitSigns,dice);// Adding groups to group root
+        root.getChildren().addAll(grid,display,exitSigns,dice,  buttons);// Adding groups to group root
 
         primaryStage.setScene(scene);
         primaryStage.show();
