@@ -176,7 +176,7 @@ public class RailroadInk {
         Set<String> in = new HashSet<>(Arrays.asList(roots));
         boards.addAll(Arrays.asList(roots));
         List<String> checkValid = new ArrayList<>(boards);
-        //判断不合法的连接
+        //Determine an invalid connection
         for (int i = 0; i < checkValid.size(); i++) {
             for (int j = i + 1; j < checkValid.size(); j++) {
                 if (Math.abs(checkValid.get(i).charAt(2) - checkValid.get(j).charAt(2)) == 0 &&
@@ -207,7 +207,7 @@ public class RailroadInk {
                 }
             }
         }
-        //判断合法连接
+        //Determine a valid connection
         boards.removeAll(Arrays.asList(roots));
         int pre = boards.size();
         int now = -1;
@@ -438,7 +438,7 @@ public class RailroadInk {
     public static int deadEnds (String t, char pL, char pR, int count){
         Placement p = new Placement();
         if (pL == '0' || pL == '6' || pR == 'A' || pR == 'G'){
-            //use the replace method to find whether the tile side has touched the edge
+            //use the replace method to find whether the tile side has touched the edge of the board
             if (pL == '0'){
                 if (p.replace(t).charAt(3) != '0'){
                     count++;
