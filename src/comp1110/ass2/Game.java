@@ -115,7 +115,6 @@ public class Game extends Application {
                         if (RailroadInk.isValidPlacementSequence(boardString + getPlacementString()) && !(pos.contains(Integer.toString(row) + Integer.toString(col))) && !theBoard.getChildren().contains(this)) {
                             snapToGrid();
                             addToPos();
-                            System.out.println(getPlacementString());
                             if (ord < 5) {
                                 tileCounter = tileCounter - 1;
                                 diceroll = diceroll.replaceFirst(this.piece,"");
@@ -129,12 +128,8 @@ public class Game extends Application {
                         warning.setHeaderText("Tile not placed on the board");
                         warning.setContentText("Please move the tile to the board");
                         warning.showAndWait();
-                        System.out.println((getLayoutY() - MARGIN)/ PIECE_SIZE);
-                        System.out.println((getLayoutX() - MARGIN)/ PIECE_SIZE);
                     } else {
                     if (!RailroadInk.isValidPlacementSequence(boardString+getPlacementString())) {
-                        System.out.println(boardString);
-                        System.out.println(getPlacementString());
                         warning.setTitle("Warning");
                         warning.setHeaderText("Illegal Placement");
                         warning.setContentText("The placement is illegal, please refer to about page");
@@ -153,7 +148,6 @@ public class Game extends Application {
             setOnScroll(event -> {
                 if (dice.getChildren().contains(this) || specials.getChildren().contains(this)) {
                 SetRotation();
-                    System.out.println(boardString);
                 }
             }
             );
@@ -266,7 +260,6 @@ public class Game extends Application {
                 setRotate ((rotation-4) * 90);
                 setScaleX(-1);
             }
-            System.out.println(rotation);
         }
 
         private void addToPos() {
