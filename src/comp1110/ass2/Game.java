@@ -99,17 +99,18 @@ public class Game extends Application {
             });
 
             setOnMouseReleased(event -> {     // drag is complete
-                setPosition();
-                if (onBoard() && RailroadInk.isBoardStringWellFormed(boardString+getPlacementString()) && !(pos.contains(Integer.toString(row) + Integer.toString(col))) && !theBoard.getChildren().contains(this)) {
-                    snapToGrid();
-                    addToPos();
-                    System.out.println(pos);
-                    updateBoardString();
-                    updateScore(boardString);
-                    if (ord < 5) {
-                        tileCounter = tileCounter - 1;
-                    }
-                }
+                if (onBoard()) {
+                    setPosition();
+                    if (RailroadInk.isBoardStringWellFormed(boardString+getPlacementString())) {
+                        if (RailroadInk.isValidPlacementSequence(boardString + getPlacementString()) && !(pos.contains(Integer.toString(row) + Integer.toString(col))) && !theBoard.getChildren().contains(this)) {
+                            snapToGrid();
+                            addToPos();
+                            System.out.println(getPlacementString());
+                            if (ord < 5) {
+                                tileCounter = tileCounter - 1;
+                            }
+                        } else snapToHome();
+                    } else snapToHome();}
                 else {
                     Alert warning = new Alert(Alert.AlertType.WARNING);
                     if (!onBoard()) {
@@ -117,8 +118,10 @@ public class Game extends Application {
                         warning.setHeaderText("Tile not placed on the board");
                         warning.setContentText("Please move the tile to the board");
                         warning.showAndWait();
+                        System.out.println(col);
+                        System.out.println(row);
                     } else {
-                    if (!RailroadInk.isBoardStringWellFormed(boardString+getPlacementString())) {
+                    if (!RailroadInk.isValidPlacementSequence(boardString+getPlacementString())) {
                         System.out.println(boardString);
                         System.out.println(getPlacementString());
                         warning.setTitle("Warning");
@@ -137,13 +140,10 @@ public class Game extends Application {
                 }
             });
             setOnScroll(event -> {
-                int index = boardStringArg.indexOf(piece+rowChar+col+rotation);
-                        System.out.println(piece+rowChar+col+rotation);
+                if (dice.getChildren().contains(this) || specials.getChildren().contains(this)) {
                 SetRotation();
-                        boardStringArg.set(index,piece+rowChar+col+rotation);
-                        System.out.println(boardStringArg.get(index));
-                        System.out.println(boardStringArg);
-                        updateScore(boardString);
+                    System.out.println(boardString);
+                }
             }
             );
         }
@@ -200,7 +200,6 @@ public class Game extends Application {
             row = (int) (getLayoutY() - MARGIN)/ PIECE_SIZE;
             col = (int) (getLayoutX() - MARGIN)/ PIECE_SIZE;
             rowChar = (char) ('A' + row);
-
         }
 
         /**
@@ -209,7 +208,7 @@ public class Game extends Application {
          */
 
         private String getPlacementString() {
-            return (this.piece+rowChar+col+rotation);
+            return (this.piece+rowChar+""+col+rotation);
         }
 
         /**
@@ -218,6 +217,7 @@ public class Game extends Application {
 
         private void updateBoardString() {
             boardStringArg.add(getPlacementString());
+            boardString = "";
             for (String s : boardStringArg)
             {
                 boardString += s + "";
@@ -233,6 +233,9 @@ public class Game extends Application {
             setLayoutY(MARGIN + row * PIECE_SIZE);
             setOpacity(1.0);
             theBoard.getChildren().add(this);
+            updateBoardString();
+            updateScore(boardString);
+
         }
 
         private void SetRotation(){
@@ -406,7 +409,8 @@ public class Game extends Application {
             info.setHeaderText("About RailroadInk");
             info.setContentText("Developed by Carry Zhang, Qixia Lu and Keyu Liu for the Australian National University for assessment purposes only. \n" +
                     "\n" +
-                    "The below rules are selected from the COMP1110 2019 S1 Assignment 2 README.md file\n" +
+                    "The below texts are extracted from the COMP1110 2019 S1 Assignment 2 README.md file\n" +
+                    "\n" +
                     "The objective is to place Tiles representing Highway and Railway routes so as to create a network connecting as many Exits as possible.\n" +
                     "\n" +
                     "The game is played over seven rounds. Each round, the four tile dice are rolled to determine the tiles that may be placed for that round. When placing a tile, it may be flipped or rotated in any direction. All four tiles must be placed, unless doing so would result in an illegal placement After placement is finished, the dice are re-rolled and the next round begins.\n" +
