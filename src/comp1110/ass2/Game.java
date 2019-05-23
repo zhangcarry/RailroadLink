@@ -7,6 +7,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -42,14 +43,19 @@ public class Game extends Application {
     private final Group buttons = new Group();
     private final Group score = new Group();
     private final Group theBoard = new Group();
+
+    /**
+     * Class Variables
+     */
+
     private int genCounter = 0;
     private int tileCounter;
+    private String diceroll;
     private String placementString;
     private ArrayList<String> boardStringArg = new ArrayList<>();
     private String boardString = "";
     private char rowChar;
     private ArrayList<String> pos = new ArrayList<>();
-
 
     /* Location of the asset images */
 
@@ -108,6 +114,7 @@ public class Game extends Application {
                             System.out.println(getPlacementString());
                             if (ord < 5) {
                                 tileCounter = tileCounter - 1;
+                                diceroll = diceroll.replaceFirst(this.piece,"");
                             }
                         } else snapToHome();
                     } else snapToHome();}
@@ -118,8 +125,8 @@ public class Game extends Application {
                         warning.setHeaderText("Tile not placed on the board");
                         warning.setContentText("Please move the tile to the board");
                         warning.showAndWait();
-                        System.out.println(col);
-                        System.out.println(row);
+                        System.out.println((getLayoutY() - MARGIN)/ PIECE_SIZE);
+                        System.out.println((getLayoutX() - MARGIN)/ PIECE_SIZE);
                     } else {
                     if (!RailroadInk.isValidPlacementSequence(boardString+getPlacementString())) {
                         System.out.println(boardString);
@@ -270,6 +277,15 @@ public class Game extends Application {
             Line y = new Line(i,0,i,BOARD_SIZE);
             grid.getChildren().addAll(x,y);
         }
+        Line centre1 = new Line(200,200,500,200);
+        Line centre2 = new Line(200,200,200,500);
+        Line centre3 = new Line(200,500,500,500);
+        Line centre4 = new Line(500,200,500,500);
+        centre1.setStroke(Color.RED);
+        centre2.setStroke(Color.RED);
+        centre3.setStroke(Color.RED);
+        centre4.setStroke(Color.RED);
+        grid.getChildren().addAll(centre1,centre2,centre3,centre4);
         grid.setLayoutX(MARGIN);
         grid.setLayoutY(MARGIN);
 
@@ -324,7 +340,6 @@ public class Game extends Application {
             Dice special = new Dice(5+i,"S"+i);
             specials.getChildren().add(special);
         }
-
     }
 
     /**
@@ -347,20 +362,38 @@ public class Game extends Application {
     private void makeControls() {
         Button generate = new Button("Generate");
         generate.setOnAction(event -> {
-            if (tileCounter > 0) {
+            if (tileCounter > 0 ) {
+                if (!RailroadInk.generateMove(boardString,diceroll).equals("")) {
                 Alert warning = new Alert(Alert.AlertType.WARNING);
                 warning.setTitle("Warning");
-                warning.setHeaderText("Remain additional tiles");
-                warning.setContentText("All tiles must be moved to the board before a new dice can be generated");
+                warning.setHeaderText("Remain valid tiles");
+                warning.setContentText("All valid tiles must be moved to the board before a new dice can be generated");
                 warning.showAndWait();
+                    System.out.println(RailroadInk.generateMove(boardString,diceroll));
+                }
+                else {
+                    tileCounter = 4;
+                    score.getChildren().clear();
+                    dice.getChildren().clear();
+                    diceroll = RailroadInk.generateDiceRoll();
+                    for (int i = 0; i < 4; i++) {
+                        String piece = diceroll.substring(i*2, i*2+2);
+                        dice.getChildren().add(new Dice(i, piece));
+                    }
+                    genCounter++;
+                    Text count = new Text("This is round "+genCounter);
+                    count.setLayoutX(MARGIN*2+BOARD_SIZE);
+                    count.setLayoutY(BOARD_SIZE+MARGIN+20);
+                    score.getChildren().add(count);
+                }
             } else {
             if (genCounter < 7) {
                 tileCounter = 4;
                 score.getChildren().clear();
                 dice.getChildren().clear();
-                String diceroll = RailroadInk.generateDiceRoll();
+                diceroll = RailroadInk.generateDiceRoll();
                 for (int i = 0; i < 4; i++) {
-                    String piece = diceroll.substring(2 * i, 2 * i + 2);
+                    String piece = diceroll.substring(i*2, i*2+2);
                     dice.getChildren().add(new Dice(i, piece));
                 }
                 genCounter++;
@@ -393,6 +426,7 @@ public class Game extends Application {
             dice.getChildren().clear();
             display.getChildren().clear();
             score.getChildren().clear();
+            boardStringArg.clear();
             boardString = "";
             makeGrid();
             pos.clear();
