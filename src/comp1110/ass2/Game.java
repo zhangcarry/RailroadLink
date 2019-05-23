@@ -374,10 +374,10 @@ public class Game extends Application {
      */
 
     private void makeControls() {
-        Button generate = new Button("Generate");
+        Button generate = new Button("Generate");   // generate a new dice roll
         generate.setOnAction(event -> {
             if (tileCounter > 0 ) {
-                if (!RailroadInk.generateMove(boardString,diceroll).equals("")) {
+                if (!RailroadInk.generateMove(boardString,diceroll).equals("")) {   // a dice roll can not be generated if there are still tiles left and a valid move can be placed
                 Alert warning = new Alert(Alert.AlertType.WARNING);
                 warning.setTitle("Warning");
                 warning.setHeaderText("Remain valid tiles");
@@ -416,7 +416,7 @@ public class Game extends Application {
                 count.setLayoutX(MARGIN*2+BOARD_SIZE);
                 count.setLayoutY(BOARD_SIZE+MARGIN+20);
                 score.getChildren().add(count);
-            } else {
+            } else {    // the game ends after 7 rounds
                 generate.setDisable(true);
                 score.getChildren().clear();
                 Text count = new Text("This is the last round");
@@ -491,6 +491,23 @@ public class Game extends Application {
         dic.setLayoutY(MARGIN+80);
         about.setLayoutX(MARGIN*2+BOARD_SIZE+170); // set position for the info button
         about.setLayoutY(BOARD_SIZE+MARGIN+50);
+        Button tip = new Button("Tips");
+        tip.setOnAction(event -> {info.setTitle("Tips");    // click-for-tips
+        info.setHeaderText("Score Higher with these Helpful Tips");
+        info.setContentText("Notice the red! Every tile placed in the red centre area will receive 1 bonus mark. \n" +
+                "\n" +
+                "Use the specials! Spcial tiles can help you achieve more. However, for the entirety of one round, you may use no more than 3 special tiles. \n" +
+                "\n" +
+                "Explore the routes! The more route you construct, the higher mark you'll receive based on exits.\n" +
+                "\n" +
+                "Think it through! You can not move or change a tile's rotation once its placed on the board, so think carefully before you place it on the board.\n" +
+                "\n" +
+                "Block it up! You'll lose points for leaving dead-ends in the board, think how changing tiles' rotations may help you with that.\n" +
+                "\n" +
+                "No more rolls! The game only rolls the dice 7 times, use each roll to your own benefits.");
+        info.showAndWait();});
+        tip.setLayoutX(MARGIN*2+BOARD_SIZE+300);
+        tip.setLayoutY(BOARD_SIZE+MARGIN+50);
         Button view = new Button("Viewer"); // launch viewer
         view.setOnAction(event -> {
             Stage s = new Stage();
@@ -498,7 +515,7 @@ public class Game extends Application {
         });
         view.setLayoutY(BOARD_SIZE+MARGIN+50);
         view.setLayoutX(MARGIN*2+BOARD_SIZE+235);
-        buttons.getChildren().addAll(generate,clear,txt,about,spc,dic,advtxt,view);
+        buttons.getChildren().addAll(generate,clear,txt,about,spc,dic,advtxt,view,tip);
     }
 
     @Override
