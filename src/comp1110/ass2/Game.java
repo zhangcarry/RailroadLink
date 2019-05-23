@@ -43,7 +43,9 @@ public class Game extends Application {
     private final Group score = new Group();
     private final Group theBoard = new Group();
     private int genCounter = 0;
+    private int tileCounter;
     private String placementString;
+    private ArrayList<String> boardStringArg = new ArrayList<>();
     private String boardString = "";
     private char rowChar;
     private ArrayList<String> pos = new ArrayList<>();
@@ -80,47 +82,69 @@ public class Game extends Application {
                 mouseY = event.getSceneY();
             });
             setOnMouseDragged(event -> {      // mouse is being dragged
+                if (theBoard.getChildren().contains(this)) {
+                    Alert warning = new Alert(Alert.AlertType.WARNING);
+                    warning.setTitle("Warning");
+                    warning.setHeaderText("Can't Touch This");
+                    warning.setContentText("Tiles that are placed on the board can not be moved");
+                    warning.showAndWait();
+                } else {
                 double movementX = event.getSceneX() - mouseX;
                 double movementY = event.getSceneY() - mouseY;
                 drag(movementX, movementY);
                 mouseX = event.getSceneX();
                 mouseY = event.getSceneY();
                 setOpacity(0.6);
+                }
             });
 
             setOnMouseReleased(event -> {     // drag is complete
                 setPosition();
-                if (onBoard() && RailroadInk.isBoardStringWellFormed(boardString+getPlacementString()) && !(pos.contains(Integer.toString(row) + Integer.toString(col)))) {
+                if (onBoard() && RailroadInk.isBoardStringWellFormed(boardString+getPlacementString()) && !(pos.contains(Integer.toString(row) + Integer.toString(col))) && !theBoard.getChildren().contains(this)) {
                     snapToGrid();
                     addToPos();
                     System.out.println(pos);
                     updateBoardString();
                     updateScore(boardString);
-                } else {
-                    Alert error = new Alert(Alert.AlertType.ERROR);
+                    if (ord < 5) {
+                        tileCounter = tileCounter - 1;
+                    }
+                }
+                else {
                     Alert warning = new Alert(Alert.AlertType.WARNING);
                     if (!onBoard()) {
                         warning.setTitle("Warning");
                         warning.setHeaderText("Tile not placed on the board");
                         warning.setContentText("Please move the tile to the board");
                         warning.showAndWait();
-                    }
+                    } else {
                     if (!RailroadInk.isBoardStringWellFormed(boardString+getPlacementString())) {
-                        error.setTitle("Error");
-                        error.setHeaderText("Illegal Placement");
-                        error.setContentText("The placement is illegal, please refer to about page");
-                        error.showAndWait();
+                        System.out.println(boardString);
+                        System.out.println(getPlacementString());
+                        warning.setTitle("Warning");
+                        warning.setHeaderText("Illegal Placement");
+                        warning.setContentText("The placement is illegal, please refer to about page");
+                        warning.showAndWait();
                     }
                     if (pos.contains(Integer.toString(row) + Integer.toString(col))) {
-                        error.setTitle("Error");
-                        error.setHeaderText("Duplicated Placement");
-                        error.setContentText("Duplicated placement is not allowed");
-                        error.showAndWait();
+                        warning.setTitle("Warning");
+                        warning.setHeaderText("Duplicated Placement");
+                        warning.setContentText("Duplicated placement is not allowed");
+                        warning.showAndWait();
                     }
+                }
                     snapToHome();
                 }
             });
-            setOnScroll(event -> SetRotation()
+            setOnScroll(event -> {
+                int index = boardStringArg.indexOf(piece+rowChar+col+rotation);
+                        System.out.println(piece+rowChar+col+rotation);
+                SetRotation();
+                        boardStringArg.set(index,piece+rowChar+col+rotation);
+                        System.out.println(boardStringArg.get(index));
+                        System.out.println(boardStringArg);
+                        updateScore(boardString);
+            }
             );
         }
 
@@ -193,9 +217,11 @@ public class Game extends Application {
          */
 
         private void updateBoardString() {
-            boardString = boardString + getPlacementString();
-            System.out.println(row);
-            System.out.println(col);
+            boardStringArg.add(getPlacementString());
+            for (String s : boardStringArg)
+            {
+                boardString += s + "";
+            }
         }
 
         /**
@@ -203,18 +229,26 @@ public class Game extends Application {
          */
 
         private void snapToGrid() {
-            this.setLayoutX(MARGIN + col * PIECE_SIZE);
-            this.setLayoutY(MARGIN + row * PIECE_SIZE);
+            setLayoutX(MARGIN + col * PIECE_SIZE);
+            setLayoutY(MARGIN + row * PIECE_SIZE);
             setOpacity(1.0);
             theBoard.getChildren().add(this);
         }
 
         private void SetRotation(){
             rotation = (rotation + 1) % 8;
-            setRotate (rotation * 90);
-            if (rotation >= 4) {
+            if (rotation > 0 && rotation < 4) {
+                setRotate (rotation * 90);
+            }
+            if (rotation == 4) {
+                setRotate(0);
                 setScaleX(-1);
             }
+            if (rotation > 4) {
+                setRotate ((rotation-4) * 90);
+                setScaleX(-1);
+            }
+            System.out.println(rotation);
         }
 
         private void addToPos() {
@@ -310,7 +344,15 @@ public class Game extends Application {
     private void makeControls() {
         Button generate = new Button("Generate");
         generate.setOnAction(event -> {
+            if (tileCounter > 0) {
+                Alert warning = new Alert(Alert.AlertType.WARNING);
+                warning.setTitle("Warning");
+                warning.setHeaderText("Remain additional tiles");
+                warning.setContentText("All tiles must be moved to the board before a new dice can be generated");
+                warning.showAndWait();
+            } else {
             if (genCounter < 7) {
+                tileCounter = 4;
                 score.getChildren().clear();
                 dice.getChildren().clear();
                 String diceroll = RailroadInk.generateDiceRoll();
@@ -319,7 +361,7 @@ public class Game extends Application {
                     dice.getChildren().add(new Dice(i, piece));
                 }
                 genCounter++;
-                Text count = new Text("This is round "+(genCounter));
+                Text count = new Text("This is round "+genCounter);
                 count.setLayoutX(MARGIN*2+BOARD_SIZE);
                 count.setLayoutY(BOARD_SIZE+MARGIN+20);
                 score.getChildren().add(count);
@@ -331,11 +373,14 @@ public class Game extends Application {
                 count.setLayoutY(BOARD_SIZE+MARGIN+20);
                 score.getChildren().add(count);
             }
-        });
+        }
+        }
+        );
         generate.setLayoutX(MARGIN*2+BOARD_SIZE); // set position for the generate button
         generate.setLayoutY(BOARD_SIZE+MARGIN+50);
         Button clear = new Button("Restart");   // restart the game
         clear.setOnAction(event -> {
+            tileCounter = 0;
             genCounter = 0;
             generate.setDisable(false);
             theBoard.getChildren().clear();
@@ -351,10 +396,29 @@ public class Game extends Application {
         });
         clear.setLayoutX(MARGIN*2+BOARD_SIZE+100); // set position for the clear button
         clear.setLayoutY(BOARD_SIZE+MARGIN+50);
-        Text txt = new Text("Current score is: ");
+        Text txt = new Text("Current basic score is: ");
         txt.setLayoutX(MARGIN*2+BOARD_SIZE);
         txt.setLayoutY(70);
-        buttons.getChildren().addAll(generate,clear,txt);
+        Button about = new Button("About");   // restart the game
+        Alert info = new Alert(Alert.AlertType.INFORMATION);
+        about.setOnAction(event -> {
+            info.setTitle("About");
+            info.setHeaderText("About RailroadInk");
+            info.setContentText("Developed by Carry Zhang, Qixia Lu and Keyu Liu for the Australian National University for assessment purposes only. \n" +
+                    "\n" +
+                    "The below rules are selected from the COMP1110 2019 S1 Assignment 2 README.md file\n" +
+                    "The objective is to place Tiles representing Highway and Railway routes so as to create a network connecting as many Exits as possible.\n" +
+                    "\n" +
+                    "The game is played over seven rounds. Each round, the four tile dice are rolled to determine the tiles that may be placed for that round. When placing a tile, it may be flipped or rotated in any direction. All four tiles must be placed, unless doing so would result in an illegal placement After placement is finished, the dice are re-rolled and the next round begins.\n" +
+                    "\n" +
+                    "In addition to the regular tiles, each round the player may choose to place one of six special tiles, with a maximum of three special tiles per game. The special tiles may also be flipped and rotated.\n" +
+                    "\n" +
+                    "The game ends at the end of the 7th round.");
+            info.showAndWait();
+        });
+        about.setLayoutX(MARGIN*2+BOARD_SIZE+170); // set position for the info button
+        about.setLayoutY(BOARD_SIZE+MARGIN+50);
+        buttons.getChildren().addAll(generate,clear,txt,about);
     }
 
     @Override
@@ -364,9 +428,7 @@ public class Game extends Application {
         makeGrid();
         makeControls();
         root.getChildren().addAll(grid,display,exitSigns,dice,buttons,specials,score,theBoard);// Adding groups to group root
-
         primaryStage.setScene(scene);
         primaryStage.show();
     }
-
 }
