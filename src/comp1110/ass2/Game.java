@@ -1,17 +1,17 @@
 package comp1110.ass2;
 
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+
+import java.util.ArrayList;
 
 /**
  * Developed by Carry Zhang, inspired by the code from the Game class in Assignment 1
@@ -42,10 +42,11 @@ public class Game extends Application {
     private final Group buttons = new Group();
     private final Group score = new Group();
     private final Group theBoard = new Group();
-    int genCounter = 0;
-    String placementString;
-    String boardString = "";
-    char rowChar;
+    private int genCounter = 0;
+    private String placementString;
+    private String boardString = "";
+    private char rowChar;
+    private ArrayList<Integer> pos = new ArrayList<>();
 
 
     /* Location of the asset images */
@@ -89,17 +90,38 @@ public class Game extends Application {
 
             setOnMouseReleased(event -> {     // drag is complete
                 setPosition();
-                if (onBoard() && RailroadInk.isBoardStringWellFormed(boardString+getPlacementString())) {
+                if (onBoard() && RailroadInk.isBoardStringWellFormed(boardString+getPlacementString()) && !(pos.contains(row+col))) {
                     snapToGrid();
+                    addToPos();
+                    System.out.println(pos);
                     updateBoardString();
                     updateScore(boardString);
                 } else {
+                    Alert error = new Alert(Alert.AlertType.ERROR);
+                    Alert warning = new Alert(Alert.AlertType.WARNING);
+                    if (!onBoard()) {
+                        warning.setTitle("Warning");
+                        warning.setHeaderText("Tile not placed on the board");
+                        warning.setContentText("Please move the tile to the board");
+                        warning.showAndWait();
+                    }
+                    if (!RailroadInk.isBoardStringWellFormed(boardString+getPlacementString())) {
+                        error.setTitle("Error");
+                        error.setHeaderText("Illegal Placement");
+                        error.setContentText("The placement is illegal, please refer to about page");
+                        error.showAndWait();
+                    }
+                    if ((pos.contains(row+col))) {
+                        error.setTitle("Error");
+                        error.setHeaderText("Duplicated Placement");
+                        error.setContentText("Duplicated placement is not allowed");
+                        error.showAndWait();
+                    }
                     snapToHome();
                 }
             });
-            setOnScroll(event -> {
-                SetRotation();
-            });
+            setOnScroll(event -> SetRotation()
+            );
         }
 
         /**
@@ -156,9 +178,18 @@ public class Game extends Application {
             rowChar = (char) ('A' + row);
         }
 
+        /**
+         * Generate the tile placement string
+         * @return a string representing the placement
+         */
+
         private String getPlacementString() {
             return (this.piece+rowChar+col+rotation);
         }
+
+        /**
+         * Update the board string to include the latest placement
+         */
 
         private void updateBoardString() {
             boardString = boardString + getPlacementString();
@@ -182,6 +213,10 @@ public class Game extends Application {
                 setScaleX(-1);
             }
         }
+
+        private void addToPos() {
+            pos.add(row+col);
+        }
     }
 
 
@@ -189,7 +224,7 @@ public class Game extends Application {
      * The grid and exits for the Game, as well as the special tiles
      */
 
-    void makeGrid() {
+    private void makeGrid() {
         for (int i = 0; i <= BOARD_SIZE; i = i + 100) {
             Line x = new Line(0,i,BOARD_SIZE,i);
             Line y = new Line(i,0,i,BOARD_SIZE);
@@ -256,7 +291,7 @@ public class Game extends Application {
      * The score display
      */
 
-    void updateScore(String placement) {
+    private void updateScore(String placement) {
         display.getChildren().clear();
         int score = RailroadInk.getBasicScore(placement);
         Text num = new Text("" + score);
@@ -309,6 +344,7 @@ public class Game extends Application {
             score.getChildren().clear();
             boardString = "";
             makeGrid();
+            pos.clear();
         });
         clear.setLayoutX(MARGIN*2+BOARD_SIZE+100); // set position for the clear button
         clear.setLayoutY(BOARD_SIZE+MARGIN+50);
