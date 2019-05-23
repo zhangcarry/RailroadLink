@@ -1,6 +1,9 @@
 package comp1110.ass2;
 
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -20,12 +23,11 @@ public class Game extends Application {
      * Dimensions
      */
 
-    private static final int WINDOW_WIDTH = 1080;
+    private static final int WINDOW_WIDTH = 1440;
     private static final int WINDOW_HEIGHT = 920;
     private static final int BOARD_SIZE = 700;
     private static final int MARGIN = 110;
     private static final int PIECE_SIZE = 100;
-    public Button generate;
 
     /**
      * Groups for various components
@@ -36,7 +38,12 @@ public class Game extends Application {
     private final Group grid = new Group();
     private final Group exitSigns = new Group();
     private final Group dice = new Group();
+    private final Group specials = new Group();
     private final Group buttons = new Group();
+    private final Group score = new Group();
+    private final Group theBoard = new Group();
+    int genCounter = 0;
+
 
     /* Location of the asset images */
 
@@ -50,15 +57,24 @@ public class Game extends Application {
         double mouseX, mouseY;      // the last known mouse positions
         double startX, startY;
         String piece;
+        int row, col;
+        int rotation = 0;
 
         Dice(int ord, String piece) {
             this.piece = piece;
+            if (ord < 5) {
             this.startX = MARGIN*2+BOARD_SIZE;
-            this.startY = MARGIN+100+(ord*100);
+            this.startY = MARGIN+100+(ord*100)+(ord*10);}
+            else {
+                this.startX = MARGIN*2+BOARD_SIZE+150;
+                this.startY = MARGIN+((ord-5)*100)+(ord*10);}
             setLayoutX(startX);
             setLayoutY(startY);
             snapToHome();
-
+            setOnMousePressed(event -> {      // mouse press indicates begin of drag
+                mouseX = event.getSceneX();
+                mouseY = event.getSceneY();
+            });
             setOnMouseDragged(event -> {      // mouse is being dragged
                 double movementX = event.getSceneX() - mouseX;
                 double movementY = event.getSceneY() - mouseY;
@@ -68,8 +84,20 @@ public class Game extends Application {
                 setOpacity(0.8);
             });
 
+            setOnMouseReleased(event -> {     // drag is complete
+                if (onBoard()) {
+                    setPosition();
+                    snapToGrid();
+                } else {
+                    snapToHome();
+                }
+            });
+            setOnScroll(event -> {
+                SetRotation();
+            });
 
         }
+
 
         /**
          * Move the piece to the new position
@@ -87,8 +115,8 @@ public class Game extends Application {
          */
 
         private boolean onBoard() {
-            return getLayoutX() > (MARGIN) && (getLayoutX() < (WINDOW_WIDTH - MARGIN - BOARD_SIZE))
-                    && getLayoutY() > (MARGIN) && (getLayoutY() < (WINDOW_HEIGHT - MARGIN));
+            return getLayoutX() > (MARGIN) && (getLayoutX() < (MARGIN + BOARD_SIZE))
+                    && getLayoutY() > (MARGIN) && (getLayoutY() < (MARGIN + BOARD_SIZE));
         }
 
         /**
@@ -114,10 +142,49 @@ public class Game extends Application {
             setFitWidth(PIECE_SIZE);
             setOpacity(1.0);
         }
+
+        /**
+         * Put the piece on the grid
+         */
+
+
+        /*
+        private String getPlacementString() {
+            StringBuilder sb = new StringBuilder();
+            for (String piecePlacementString : "piecePlacements") {
+                sb.append(piecePlacementString);
+            }
+            return sb.toString();
+        }
+        */
+
+        private void setPosition(){
+            row = (int) (getLayoutY() - MARGIN + 50)/ PIECE_SIZE;
+            col = (int) (getLayoutX() - MARGIN + 50)/ PIECE_SIZE;
+        }
+        /**
+         * Put the piece on the grid
+         */
+
+        private void snapToGrid() {
+            this.setLayoutX(MARGIN + col * PIECE_SIZE);
+            this.setLayoutY(MARGIN + row * PIECE_SIZE);
+            setOpacity(1.0);
+            theBoard.getChildren().add(this);
+        }
+
+        private void SetRotation(){
+            rotation = (rotation + 1) % 8;
+            setRotate (rotation * 90);
+            if (rotation >= 4) {
+                setScaleX(-1);
+            }
+        }
     }
 
+
     /**
-     * The grid and exits for the Game
+     * The grid and exits for the Game, as well as the special tiles
      */
 
     void makeGrid() {
@@ -175,6 +242,11 @@ public class Game extends Application {
             }
             exitSigns.getChildren().add(imgv);
         }
+
+        for (int i = 0; i<6; i++) {
+            Dice special = new Dice(5+i,"S"+i);
+            specials.getChildren().add(special);
+        }
     }
 
     /**
@@ -197,37 +269,55 @@ public class Game extends Application {
      */
 
     private void makeControls() {
-        generate = new Button("Generate");
+        Button generate = new Button("Generate");
         generate.setOnAction(event -> {
-            dice.getChildren().clear();
-            String diceroll = RailroadInk.generateDiceRoll();
-            for (int i = 0; i < 4; i++) {
-                String piece = diceroll.substring(2 * i, 2 * i + 2);
-                dice.getChildren().add(new Dice(i, piece));
+            if (genCounter < 7) {
+                score.getChildren().clear();
+                dice.getChildren().clear();
+                String diceroll = RailroadInk.generateDiceRoll();
+                for (int i = 0; i < 4; i++) {
+                    String piece = diceroll.substring(2 * i, 2 * i + 2);
+                    dice.getChildren().add(new Dice(i, piece));
+                }
+                genCounter++;
+                Text count = new Text("This is round "+(genCounter));
+                count.setLayoutX(MARGIN*2+BOARD_SIZE);
+                count.setLayoutY(BOARD_SIZE+MARGIN+50);
+                score.getChildren().add(count);
+            } else {
+                generate.setDisable(true);
+                score.getChildren().clear();
+                Text count = new Text("This is the last round");
+                count.setLayoutX(MARGIN*2+BOARD_SIZE);
+                count.setLayoutY(BOARD_SIZE+MARGIN+50);
+                score.getChildren().add(count);
             }
         });
-        generate.setLayoutX(MARGIN*2+BOARD_SIZE); // set position for the button
-        generate.setLayoutY(BOARD_SIZE+MARGIN);
-        Button clear = new Button("Clear");
+        generate.setLayoutX(MARGIN*2+BOARD_SIZE); // set position for the generate button
+        generate.setLayoutY(BOARD_SIZE+MARGIN+50);
+        Button clear = new Button("Restart");   // restart the game
         clear.setOnAction(event -> {
+            genCounter = 0;
+            theBoard.getChildren().clear();
+            specials.getChildren().clear();
+            grid.getChildren().clear();
+            exitSigns.getChildren().clear();
             dice.getChildren().clear();
+            makeGrid();
         });
-        clear.setLayoutX(MARGIN*2+BOARD_SIZE+30);
-        clear.setLayoutY(BOARD_SIZE+MARGIN);
-        buttons.getChildren().addAll(generate);
+        clear.setLayoutX(MARGIN*2+BOARD_SIZE+100); // set position for the clear button
+        clear.setLayoutY(BOARD_SIZE+MARGIN+50);
+        buttons.getChildren().addAll(generate,clear);
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("Railroad Link");
         Scene scene = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT);
-
-        makeControls();
-        //Button generate = new Button("Gen");
-        //buttons.getChildren().addAll(generate);
         displayScore(""); // temporary placeholder
         makeGrid();
-        root.getChildren().addAll(grid,display,exitSigns,dice,  buttons);// Adding groups to group root
+        makeControls();
+        root.getChildren().addAll(grid,display,exitSigns,dice,buttons,specials,score,theBoard);// Adding groups to group root
 
         primaryStage.setScene(scene);
         primaryStage.show();
