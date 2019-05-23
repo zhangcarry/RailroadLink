@@ -481,6 +481,7 @@ public class RailroadInk {
      * @param diceRoll a String representing a dice roll for the round
      * @return a String representing an ordered sequence of valid piece placements for the current round
      * @see RailroadInk#generateDiceRoll()
+     * Developed by Keyu Liu
      */
     public static String generateMove(String boardString, String diceRoll) {
         // FIXME Task 10: generate a valid move
@@ -585,16 +586,166 @@ public class RailroadInk {
      *
      * @param boardString a board string representing a completed game
      * @return integer (positive or negative) for final score (not counting expansion packs)
+     * Developed by Keyu Liu
      */
+    private static List<List<String>> getRoads(String boardString, String map) {
+        for (int j = 0; j < boardString.length(); j = j + 5) {
+            if ("B2".equals(boardString.substring(j, j + 2))) {
+                String subB2 = "A4" + boardString.substring(j + 2, j + 5) + "A1" + boardString.substring(j + 2, j + 4) + (Integer.parseInt(boardString.substring(j + 4, j + 5)) + 1);
+                boardString = boardString.substring(0, j) + boardString.substring(j + 5) + subB2;
+                j = j - 5;
+            }
+        }
+        String bigMap = map + boardString;
+        //used exits
+        List<String> usedExit = new LinkedList<>();
+        //all results
+        List<List<String>> results = new LinkedList<>();
+        //start connecting from exit
+        for (int i = 0; i < map.length(); i = i + 5) {
+            String exit = map.substring(i, i + 5);
+            //if not used
+            if (!usedExit.contains(exit)) {
+                Stack<String> line = new Stack<>();
+                //
+                usedExit.add(exit);
+                line.push(exit);
+                //map include exits
+                String bigMapTemp = bigMap;
+                List<String> result = new LinkedList<>();
+                //keep looping until no more possible result
+                while (!line.empty()) {
+                    String front = line.pop();
+                    result.add(front);
+                    for (int j = i + 5; j < bigMapTemp.length(); j = j + 5) {
+                        String board = bigMapTemp.substring(j, j + 5);
+                        if (areConnectedNeighbours(front, board)) {
+                            bigMapTemp = bigMapTemp.substring(0, j) + bigMapTemp.substring(j + 5);
+                            j = j - 5;
+                            line.push(board);
+                            if (map.contains(board)) {
+                                usedExit.add(board);
+                            }
+                        }
+                    }
+                }
+                results.add(result);
+            }
+        }
+        return results;
+    }
+
     public static int getAdvancedScore(String boardString) {
         // FIXME Task 12: compute the total score including bonus points
-        /*
-        int longestRailroad; //longestRailroad parameter
-        boolean longestRailroadScore; //calculate the bonus score for the longest Railroad
-        int longestHighway; //longestHighway parameter
-        boolean longestHighwayScore; //calculate the bonus score for the longest highway
-        int finalScore; //final scores parameter
-        */
-        return -1;
+        String map = "S2@10S2@50S3@30S3B/0S3B70S2D/0S2D70S3F/0S3F70S2H10S3H30S2H50";
+        String pointsType = "S0S1S4S5B0B1";
+        StringBuilder checkPoint = new StringBuilder(map);
+        for (int i = 0; i < boardString.length(); i = i + 5)
+            if (pointsType.contains(boardString.substring(i, i + 2)))
+                checkPoint.append(boardString.substring(i, i + 5));
+        List<List<String>> roads = getRoads(boardString, map);
+        int[] dirY = {0, 1, 0, -1};
+        int[] dirX = {-1, 0, 1, 0};
+        List<Integer> maxH = new LinkedList<>();
+        List<Integer> maxR = new LinkedList<>();
+        maxH.add(0);
+        maxR.add(0);
+        Map<String, String> allMap = new HashMap<>();
+        for (List<String> road : roads) {
+            for (String r : road) {
+                if (allMap.get(r.substring(2, 4)) == null)
+                    allMap.put(r.substring(2, 4), r + "0000");
+                else {
+                    if ("A1".equals(r.substring(0, 2))) {
+                        allMap.put(allMap.get(r.substring(2, 4)).substring(2,4) + 'H', allMap.get(r.substring(2, 4)));
+                        allMap.put(allMap.get(r.substring(2, 4)).substring(2,4) + 'R', r + "0000");
+                    } else {
+                        allMap.put(allMap.get(r.substring(2, 4)).substring(2,4) + 'R', allMap.get(r.substring(2, 4)));
+                        allMap.put(allMap.get(r.substring(2, 4)).substring(2,4) + 'H', r + "0000");
+                    }
+                    allMap.remove(r.substring(2, 4));
+                }
+            }
+        }
+        char type;
+        char[] types = {'H', 'R'};
+        for (int ti = 0; ti < types.length; ti++) {
+            type = types[ti];
+            for (int fi = 0; fi < checkPoint.length(); fi=fi+5) {
+                int finnalMax = 0;
+                for (List<String> road : roads) {
+                    StringBuilder firstRoad = new StringBuilder(checkPoint.substring(fi, fi + 5) + "0000");
+                    if (road.contains(firstRoad.substring(0, 5))) {
+                        List<StringBuilder> allRoads = new LinkedList<>();
+                        allRoads.add(firstRoad);
+                        boolean change = true;
+                        int totalMax = 0;
+                        while (change) {
+                            change = false;
+                            List<StringBuilder> allRoadsOld = new LinkedList<>(allRoads);
+                            for (StringBuilder oneRoad : allRoadsOld) {
+                                String current = oneRoad.substring(oneRoad.length() - 9);
+                                boolean needNewRoad = false;
+                                for (int i = 0; i < 4; i++) {
+                                    char direcX = (char) (current.charAt(2) + dirX[i]);
+                                    char direcY = (char) (current.charAt(3) + dirY[i]);
+                                    String connectState = allMap.get("" + direcX + direcY);
+                                    if (connectState == null) {
+                                        connectState = allMap.get("" + direcX + direcY + type);
+                                    }
+                                    if (connectState != null) {
+                                        int alreadyHasIt = oneRoad.toString().indexOf(connectState.substring(0, 5));
+                                        if (alreadyHasIt > 0) {
+                                            connectState = oneRoad.substring(alreadyHasIt, alreadyHasIt + 9);
+                                        }
+                                    }
+                                    if (connectState != null
+                                            && areConnectedNeighbours(connectState.substring(0, 5), current.substring(0, 5))
+                                            && current.charAt(5 + i) == '0'
+                                            && connectState.charAt(5 + (2 + i) % 4) == '0'
+                                            && getDirectionType(current.substring(0, 5), i) == type
+                                    ) {
+                                        change = true;
+                                        String newCurrent = current.substring(0, 5 + i) + 1 + current.substring(6 + i);
+                                        String newConnect = connectState.substring(0, 5 + (2 + i) % 4) + 1 + connectState.substring(6 + (2 + i) % 4);
+                                        current = newCurrent;
+                                        if (!needNewRoad) {
+                                            oneRoad.delete(oneRoad.length() - 9, oneRoad.length());
+                                            needNewRoad = true;
+                                            oneRoad.append(newCurrent);
+                                            oneRoad.append(newConnect);
+                                        } else {
+                                            StringBuilder newRoad = new StringBuilder(oneRoad);
+                                            newRoad.delete(oneRoad.length() - 18, oneRoad.length());
+                                            newRoad.append(newCurrent);
+                                            newRoad.append(newConnect);
+                                            allRoads.add(newRoad);
+                                        }
+                                    }
+                                }
+                                int maxLength = 0;
+                                for (StringBuilder stringBuilder : allRoads) {
+                                    int currentRoadLength = 0;
+                                    for (int i = 0; i < stringBuilder.length(); i = i + 9)
+                                        if (!map.contains(stringBuilder.subSequence(i, i + 5)))
+                                            currentRoadLength++;
+                                    if (maxLength < currentRoadLength)
+                                        maxLength = currentRoadLength;
+                                }
+                                if (totalMax < maxLength) {
+                                    totalMax = maxLength;
+                                }
+                            }
+                        }
+                        if (totalMax > finnalMax)
+                            finnalMax = totalMax;
+                        if (type == 'H') maxH.add(finnalMax);
+                        else maxR.add(finnalMax);
+                    }
+                }
+            }
+        }
+        return getBasicScore(boardString)+Collections.max(maxH)+Collections.max(maxR);
     }
 }
+

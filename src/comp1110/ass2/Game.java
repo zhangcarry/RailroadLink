@@ -1,17 +1,23 @@
 package comp1110.ass2;
 
+import com.sun.glass.ui.View;
+import comp1110.ass2.gui.Viewer;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 /**
  * Developed by Carry Zhang, inspired by the code from the Game class in Assignment 1
@@ -42,14 +48,18 @@ public class Game extends Application {
     private final Group buttons = new Group();
     private final Group score = new Group();
     private final Group theBoard = new Group();
+
+    /**
+     * Class Variables
+     */
+
     private int genCounter = 0;
     private int tileCounter;
-    private String placementString;
+    private String diceroll;
     private ArrayList<String> boardStringArg = new ArrayList<>();
     private String boardString = "";
     private char rowChar;
     private ArrayList<String> pos = new ArrayList<>();
-
 
     /* Location of the asset images */
 
@@ -83,7 +93,7 @@ public class Game extends Application {
             });
             setOnMouseDragged(event -> {      // mouse is being dragged
                 if (theBoard.getChildren().contains(this)) {
-                    Alert warning = new Alert(Alert.AlertType.WARNING);
+                    Alert warning = new Alert(Alert.AlertType.WARNING); // a placement can not be moved once moved to the grid
                     warning.setTitle("Warning");
                     warning.setHeaderText("Can't Touch This");
                     warning.setContentText("Tiles that are placed on the board can not be moved");
@@ -99,26 +109,30 @@ public class Game extends Application {
             });
 
             setOnMouseReleased(event -> {     // drag is complete
-                setPosition();
-                if (onBoard() && RailroadInk.isBoardStringWellFormed(boardString+getPlacementString()) && !(pos.contains(Integer.toString(row) + Integer.toString(col))) && !theBoard.getChildren().contains(this)) {
-                    snapToGrid();
-                    addToPos();
-                    System.out.println(pos);
-                    updateBoardString();
-                    updateScore(boardString);
-                    if (ord < 5) {
-                        tileCounter = tileCounter - 1;
-                    }
-                }
+                if (onBoard()) {
+                    setPosition();
+                    if (RailroadInk.isBoardStringWellFormed(boardString+getPlacementString())) {
+                        if (RailroadInk.isValidPlacementSequence(boardString + getPlacementString()) && !(pos.contains(Integer.toString(row) + Integer.toString(col))) && !theBoard.getChildren().contains(this)) {
+                            snapToGrid();
+                            addToPos();
+                            System.out.println(getPlacementString());
+                            if (ord < 5) {
+                                tileCounter = tileCounter - 1;
+                                diceroll = diceroll.replaceFirst(this.piece,"");
+                            }
+                        }
+                    } else snapToHome();}
                 else {
-                    Alert warning = new Alert(Alert.AlertType.WARNING);
+                    Alert warning = new Alert(Alert.AlertType.WARNING); // warning messages
                     if (!onBoard()) {
                         warning.setTitle("Warning");
                         warning.setHeaderText("Tile not placed on the board");
                         warning.setContentText("Please move the tile to the board");
                         warning.showAndWait();
+                        System.out.println((getLayoutY() - MARGIN)/ PIECE_SIZE);
+                        System.out.println((getLayoutX() - MARGIN)/ PIECE_SIZE);
                     } else {
-                    if (!RailroadInk.isBoardStringWellFormed(boardString+getPlacementString())) {
+                    if (!RailroadInk.isValidPlacementSequence(boardString+getPlacementString())) {
                         System.out.println(boardString);
                         System.out.println(getPlacementString());
                         warning.setTitle("Warning");
@@ -137,13 +151,10 @@ public class Game extends Application {
                 }
             });
             setOnScroll(event -> {
-                int index = boardStringArg.indexOf(piece+rowChar+col+rotation);
-                        System.out.println(piece+rowChar+col+rotation);
+                if (dice.getChildren().contains(this) || specials.getChildren().contains(this)) {
                 SetRotation();
-                        boardStringArg.set(index,piece+rowChar+col+rotation);
-                        System.out.println(boardStringArg.get(index));
-                        System.out.println(boardStringArg);
-                        updateScore(boardString);
+                    System.out.println(boardString);
+                }
             }
             );
         }
@@ -200,7 +211,6 @@ public class Game extends Application {
             row = (int) (getLayoutY() - MARGIN)/ PIECE_SIZE;
             col = (int) (getLayoutX() - MARGIN)/ PIECE_SIZE;
             rowChar = (char) ('A' + row);
-
         }
 
         /**
@@ -209,7 +219,7 @@ public class Game extends Application {
          */
 
         private String getPlacementString() {
-            return (this.piece+rowChar+col+rotation);
+            return (this.piece+rowChar+""+col+rotation);
         }
 
         /**
@@ -218,6 +228,7 @@ public class Game extends Application {
 
         private void updateBoardString() {
             boardStringArg.add(getPlacementString());
+            boardString = "";
             for (String s : boardStringArg)
             {
                 boardString += s + "";
@@ -233,7 +244,14 @@ public class Game extends Application {
             setLayoutY(MARGIN + row * PIECE_SIZE);
             setOpacity(1.0);
             theBoard.getChildren().add(this);
+            updateBoardString();
+            updateScore(boardString);
+
         }
+
+        /**
+         * Change the rotation value of the given piece
+         */
 
         private void SetRotation(){
             rotation = (rotation + 1) % 8;
@@ -267,6 +285,15 @@ public class Game extends Application {
             Line y = new Line(i,0,i,BOARD_SIZE);
             grid.getChildren().addAll(x,y);
         }
+        Line centre1 = new Line(200,200,500,200);
+        Line centre2 = new Line(200,200,200,500);
+        Line centre3 = new Line(200,500,500,500);
+        Line centre4 = new Line(500,200,500,500);
+        centre1.setStroke(Color.RED);
+        centre2.setStroke(Color.RED);
+        centre3.setStroke(Color.RED);
+        centre4.setStroke(Color.RED);
+        grid.getChildren().addAll(centre1,centre2,centre3,centre4);
         grid.setLayoutX(MARGIN);
         grid.setLayoutY(MARGIN);
 
@@ -321,7 +348,6 @@ public class Game extends Application {
             Dice special = new Dice(5+i,"S"+i);
             specials.getChildren().add(special);
         }
-
     }
 
     /**
@@ -332,9 +358,15 @@ public class Game extends Application {
         display.getChildren().clear();
         int score = RailroadInk.getBasicScore(placement);
         Text num = new Text("" + score);
-        num.setLayoutX(MARGIN*2+BOARD_SIZE);
-        num.setLayoutY(85);
-        display.getChildren().addAll(num);
+        num.setFont(Font.font(35));
+        num.setLayoutX(MARGIN+50+BOARD_SIZE);
+        num.setLayoutY(105);
+        int advscore = RailroadInk.getAdvancedScore(placement);
+        Text advnum = new Text("" + advscore);
+        advnum.setFont(Font.font(35));
+        advnum.setLayoutX(MARGIN+280+BOARD_SIZE);
+        advnum.setLayoutY(105);
+        display.getChildren().addAll(num,advnum);
     }
 
     /**
@@ -342,22 +374,41 @@ public class Game extends Application {
      */
 
     private void makeControls() {
-        Button generate = new Button("Generate");
+        Button generate = new Button("Generate");   // generate a new dice roll
         generate.setOnAction(event -> {
-            if (tileCounter > 0) {
+            if (tileCounter > 0 ) {
+                if (!RailroadInk.generateMove(boardString,diceroll).equals("")) {   // a dice roll can not be generated if there are still tiles left and a valid move can be placed
                 Alert warning = new Alert(Alert.AlertType.WARNING);
                 warning.setTitle("Warning");
-                warning.setHeaderText("Remain additional tiles");
-                warning.setContentText("All tiles must be moved to the board before a new dice can be generated");
+                warning.setHeaderText("Remain valid tiles");
+                warning.setContentText("All valid tiles must be moved to the board before a new dice can be generated");
                 warning.showAndWait();
+                    System.out.println(RailroadInk.generateMove(boardString,diceroll));
+                }
+                else {
+                    tileCounter = 4;
+                    score.getChildren().clear();
+                    dice.getChildren().clear();
+                    diceroll = RailroadInk.generateDiceRoll();
+                    for (int i = 0; i < 4; i++) {
+                        String piece = diceroll.substring(i*2, i*2+2);
+                        dice.getChildren().add(new Dice(i, piece));
+                    }
+                    genCounter++;
+                    Text count = new Text("This is round "+genCounter);
+                    count.setLayoutX(MARGIN*2+BOARD_SIZE);
+                    count.setLayoutY(BOARD_SIZE+MARGIN+25);
+                    count.setFont(Font.font(15));
+                    score.getChildren().add(count);
+                }
             } else {
             if (genCounter < 7) {
                 tileCounter = 4;
                 score.getChildren().clear();
                 dice.getChildren().clear();
-                String diceroll = RailroadInk.generateDiceRoll();
+                diceroll = RailroadInk.generateDiceRoll();
                 for (int i = 0; i < 4; i++) {
-                    String piece = diceroll.substring(2 * i, 2 * i + 2);
+                    String piece = diceroll.substring(i*2, i*2+2);
                     dice.getChildren().add(new Dice(i, piece));
                 }
                 genCounter++;
@@ -365,7 +416,7 @@ public class Game extends Application {
                 count.setLayoutX(MARGIN*2+BOARD_SIZE);
                 count.setLayoutY(BOARD_SIZE+MARGIN+20);
                 score.getChildren().add(count);
-            } else {
+            } else {    // the game ends after 7 rounds
                 generate.setDisable(true);
                 score.getChildren().clear();
                 Text count = new Text("This is the last round");
@@ -376,10 +427,17 @@ public class Game extends Application {
         }
         }
         );
-        generate.setLayoutX(MARGIN*2+BOARD_SIZE); // set position for the generate button
+        generate.setLayoutX(MARGIN*2+BOARD_SIZE+15); // set position for the generate button
         generate.setLayoutY(BOARD_SIZE+MARGIN+50);
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
         Button clear = new Button("Restart");   // restart the game
         clear.setOnAction(event -> {
+            confirm.setTitle("Confirmation");   // double-checking in case of wrong click
+            confirm.setHeaderText("Restarting the game");
+            confirm.setContentText("By restarting the game, you'll lose all your current progress.\n" +
+                    "Would you like to restart the game?");
+            Optional<ButtonType> result = confirm.showAndWait();
+            if (result.get() == ButtonType.OK) {
             tileCounter = 0;
             genCounter = 0;
             generate.setDisable(false);
@@ -390,15 +448,21 @@ public class Game extends Application {
             dice.getChildren().clear();
             display.getChildren().clear();
             score.getChildren().clear();
+            boardStringArg.clear();
             boardString = "";
             makeGrid();
-            pos.clear();
+            pos.clear();}
         });
         clear.setLayoutX(MARGIN*2+BOARD_SIZE+100); // set position for the clear button
         clear.setLayoutY(BOARD_SIZE+MARGIN+50);
         Text txt = new Text("Current basic score is: ");
-        txt.setLayoutX(MARGIN*2+BOARD_SIZE);
+        txt.setFont(Font.font(20));
+        txt.setLayoutX(MARGIN+BOARD_SIZE+50);
         txt.setLayoutY(70);
+        Text advtxt = new Text("Current advanced score is: ");
+        advtxt.setFont(Font.font(20));
+        advtxt.setLayoutX(MARGIN+BOARD_SIZE+280);
+        advtxt.setLayoutY(70);
         Button about = new Button("About");   // restart the game
         Alert info = new Alert(Alert.AlertType.INFORMATION);
         about.setOnAction(event -> {
@@ -406,8 +470,9 @@ public class Game extends Application {
             info.setHeaderText("About RailroadInk");
             info.setContentText("Developed by Carry Zhang, Qixia Lu and Keyu Liu for the Australian National University for assessment purposes only. \n" +
                     "\n" +
-                    "The below rules are selected from the COMP1110 2019 S1 Assignment 2 README.md file\n" +
-                    "The objective is to place Tiles representing Highway and Railway routes so as to create a network connecting as many Exits as possible.\n" +
+                    "The below texts are extracted from the COMP1110 2019 S1 Assignment 2 README.md file\n" +
+                    "\n" +
+                    "The objective of the game is to place Tiles representing Highway and Railway routes so as to create a network connecting as many Exits as possible.\n" +
                     "\n" +
                     "The game is played over seven rounds. Each round, the four tile dice are rolled to determine the tiles that may be placed for that round. When placing a tile, it may be flipped or rotated in any direction. All four tiles must be placed, unless doing so would result in an illegal placement After placement is finished, the dice are re-rolled and the next round begins.\n" +
                     "\n" +
@@ -416,14 +481,46 @@ public class Game extends Application {
                     "The game ends at the end of the 7th round.");
             info.showAndWait();
         });
+        Text spc = new Text("Special");
+        spc.setFont(Font.font(15));
+        spc.setLayoutX(MARGIN*2+BOARD_SIZE+150);
+        spc.setLayoutY(MARGIN+30);
+        Text dic = new Text("Dice");
+        dic.setFont(Font.font(15));
+        dic.setLayoutX(MARGIN*2+BOARD_SIZE);
+        dic.setLayoutY(MARGIN+80);
         about.setLayoutX(MARGIN*2+BOARD_SIZE+170); // set position for the info button
         about.setLayoutY(BOARD_SIZE+MARGIN+50);
-        buttons.getChildren().addAll(generate,clear,txt,about);
+        Button tip = new Button("Tips");
+        tip.setOnAction(event -> {info.setTitle("Tips");    // click-for-tips
+        info.setHeaderText("Score Higher with these Helpful Tips");
+        info.setContentText("Notice the red! Every tile placed in the red centre area will receive 1 bonus mark. \n" +
+                "\n" +
+                "Use the specials! Spcial tiles can help you achieve more. However, for the entirety of one round, you may use no more than 3 special tiles. \n" +
+                "\n" +
+                "Explore the routes! The more route you construct, the higher mark you'll receive based on exits.\n" +
+                "\n" +
+                "Think it through! You can not move or change a tile's rotation once its placed on the board, so think carefully before you place it on the board.\n" +
+                "\n" +
+                "Block it up! You'll lose points for leaving dead-ends in the board, think how changing tiles' rotations may help you with that.\n" +
+                "\n" +
+                "No more rolls! The game only rolls the dice 7 times, use each roll to your own benefits.");
+        info.showAndWait();});
+        tip.setLayoutX(MARGIN*2+BOARD_SIZE+300);
+        tip.setLayoutY(BOARD_SIZE+MARGIN+50);
+        Button view = new Button("Viewer"); // launch viewer
+        view.setOnAction(event -> {
+            Stage s = new Stage();
+            new Viewer().start(s);
+        });
+        view.setLayoutY(BOARD_SIZE+MARGIN+50);
+        view.setLayoutX(MARGIN*2+BOARD_SIZE+235);
+        buttons.getChildren().addAll(generate,clear,txt,about,spc,dic,advtxt,view,tip);
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        primaryStage.setTitle("Railroad Link");
+        primaryStage.setTitle("RailroadInk");
         Scene scene = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT);
         makeGrid();
         makeControls();

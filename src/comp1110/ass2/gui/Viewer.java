@@ -28,7 +28,7 @@ import javafx.stage.Stage;
 
 public class Viewer extends Application {
     /* board layout */
-    private static final int VIEWER_WIDTH = 1024;
+    private static final int VIEWER_WIDTH = 700;
     private static final int VIEWER_HEIGHT = 768;
     private static final int BOARD_SIZE = 700;
 
@@ -163,8 +163,8 @@ public class Viewer extends Application {
         controls.getChildren().add(hb);
     }
     @Override
-    public void start(Stage primaryStage) throws Exception {
-        primaryStage.setTitle("StepsGame Viewer");
+    public void start(Stage primaryStage) {
+        primaryStage.setTitle("Placement Viewer");
         Scene scene = new Scene(root, VIEWER_WIDTH, VIEWER_HEIGHT);
 
         root.getChildren().addAll(controls,images,grid); // Adding group images to group root
@@ -175,4 +175,8 @@ public class Viewer extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
     }
+    public static void main(String[] args) {
+        launch(args);
+    }
+
 }
