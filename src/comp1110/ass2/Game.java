@@ -46,7 +46,7 @@ public class Game extends Application {
     private String placementString;
     private String boardString = "";
     private char rowChar;
-    private ArrayList<Integer> pos = new ArrayList<>();
+    private ArrayList<String> pos = new ArrayList<>();
 
 
     /* Location of the asset images */
@@ -90,7 +90,7 @@ public class Game extends Application {
 
             setOnMouseReleased(event -> {     // drag is complete
                 setPosition();
-                if (onBoard() && RailroadInk.isBoardStringWellFormed(boardString+getPlacementString()) && !(pos.contains(row+col))) {
+                if (onBoard() && RailroadInk.isBoardStringWellFormed(boardString+getPlacementString()) && !(pos.contains(Integer.toString(row) + Integer.toString(col)))) {
                     snapToGrid();
                     addToPos();
                     System.out.println(pos);
@@ -111,7 +111,7 @@ public class Game extends Application {
                         error.setContentText("The placement is illegal, please refer to about page");
                         error.showAndWait();
                     }
-                    if ((pos.contains(row+col))) {
+                    if (pos.contains(Integer.toString(row) + Integer.toString(col))) {
                         error.setTitle("Error");
                         error.setHeaderText("Duplicated Placement");
                         error.setContentText("Duplicated placement is not allowed");
@@ -173,9 +173,10 @@ public class Game extends Application {
          */
 
         private void setPosition(){
-            row = (int) (getLayoutY() - MARGIN + 50)/ PIECE_SIZE;
+            row = (int) (getLayoutY() - MARGIN)/ PIECE_SIZE;
             col = (int) (getLayoutX() - MARGIN)/ PIECE_SIZE;
             rowChar = (char) ('A' + row);
+
         }
 
         /**
@@ -193,6 +194,8 @@ public class Game extends Application {
 
         private void updateBoardString() {
             boardString = boardString + getPlacementString();
+            System.out.println(row);
+            System.out.println(col);
         }
 
         /**
@@ -215,7 +218,7 @@ public class Game extends Application {
         }
 
         private void addToPos() {
-            pos.add(row+col);
+            pos.add(Integer.toString(row) + Integer.toString(col));
         }
     }
 
