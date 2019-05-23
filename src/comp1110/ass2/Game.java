@@ -43,6 +43,9 @@ public class Game extends Application {
     private final Group score = new Group();
     private final Group theBoard = new Group();
     int genCounter = 0;
+    String placementString;
+    String boardString = "";
+    char rowChar;
 
 
     /* Location of the asset images */
@@ -81,13 +84,15 @@ public class Game extends Application {
                 drag(movementX, movementY);
                 mouseX = event.getSceneX();
                 mouseY = event.getSceneY();
-                setOpacity(0.8);
+                setOpacity(0.6);
             });
 
             setOnMouseReleased(event -> {     // drag is complete
-                if (onBoard()) {
-                    setPosition();
+                setPosition();
+                if (onBoard() && RailroadInk.isBoardStringWellFormed(boardString+getPlacementString())) {
                     snapToGrid();
+                    updateBoardString();
+                    updateScore(boardString);
                 } else {
                     snapToHome();
                 }
@@ -95,9 +100,7 @@ public class Game extends Application {
             setOnScroll(event -> {
                 SetRotation();
             });
-
         }
-
 
         /**
          * Move the piece to the new position
@@ -147,21 +150,20 @@ public class Game extends Application {
          * Put the piece on the grid
          */
 
-
-        /*
-        private String getPlacementString() {
-            StringBuilder sb = new StringBuilder();
-            for (String piecePlacementString : "piecePlacements") {
-                sb.append(piecePlacementString);
-            }
-            return sb.toString();
-        }
-        */
-
         private void setPosition(){
             row = (int) (getLayoutY() - MARGIN + 50)/ PIECE_SIZE;
-            col = (int) (getLayoutX() - MARGIN + 50)/ PIECE_SIZE;
+            col = (int) (getLayoutX() - MARGIN)/ PIECE_SIZE;
+            rowChar = (char) ('A' + row);
         }
+
+        private String getPlacementString() {
+            return (this.piece+rowChar+col+rotation);
+        }
+
+        private void updateBoardString() {
+            boardString = boardString + getPlacementString();
+        }
+
         /**
          * Put the piece on the grid
          */
@@ -247,21 +249,20 @@ public class Game extends Application {
             Dice special = new Dice(5+i,"S"+i);
             specials.getChildren().add(special);
         }
+
     }
 
     /**
      * The score display
      */
 
-    void displayScore(String placement) {
+    void updateScore(String placement) {
+        display.getChildren().clear();
         int score = RailroadInk.getBasicScore(placement);
-        Text txt = new Text("Current score is: ");
         Text num = new Text("" + score);
-        txt.setLayoutX(900);
-        txt.setLayoutY(70);
-        num.setLayoutX(900);
+        num.setLayoutX(MARGIN*2+BOARD_SIZE);
         num.setLayoutY(85);
-        display.getChildren().addAll(txt,num);
+        display.getChildren().addAll(num);
     }
 
     /**
@@ -282,14 +283,14 @@ public class Game extends Application {
                 genCounter++;
                 Text count = new Text("This is round "+(genCounter));
                 count.setLayoutX(MARGIN*2+BOARD_SIZE);
-                count.setLayoutY(BOARD_SIZE+MARGIN+50);
+                count.setLayoutY(BOARD_SIZE+MARGIN+20);
                 score.getChildren().add(count);
             } else {
                 generate.setDisable(true);
                 score.getChildren().clear();
                 Text count = new Text("This is the last round");
                 count.setLayoutX(MARGIN*2+BOARD_SIZE);
-                count.setLayoutY(BOARD_SIZE+MARGIN+50);
+                count.setLayoutY(BOARD_SIZE+MARGIN+20);
                 score.getChildren().add(count);
             }
         });
@@ -298,23 +299,29 @@ public class Game extends Application {
         Button clear = new Button("Restart");   // restart the game
         clear.setOnAction(event -> {
             genCounter = 0;
+            generate.setDisable(false);
             theBoard.getChildren().clear();
             specials.getChildren().clear();
             grid.getChildren().clear();
             exitSigns.getChildren().clear();
             dice.getChildren().clear();
+            display.getChildren().clear();
+            score.getChildren().clear();
+            boardString = "";
             makeGrid();
         });
         clear.setLayoutX(MARGIN*2+BOARD_SIZE+100); // set position for the clear button
         clear.setLayoutY(BOARD_SIZE+MARGIN+50);
-        buttons.getChildren().addAll(generate,clear);
+        Text txt = new Text("Current score is: ");
+        txt.setLayoutX(MARGIN*2+BOARD_SIZE);
+        txt.setLayoutY(70);
+        buttons.getChildren().addAll(generate,clear,txt);
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("Railroad Link");
         Scene scene = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT);
-        displayScore(""); // temporary placeholder
         makeGrid();
         makeControls();
         root.getChildren().addAll(grid,display,exitSigns,dice,buttons,specials,score,theBoard);// Adding groups to group root
